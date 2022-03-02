@@ -21,6 +21,7 @@ const Home = function () {
 
   return (
     <Box
+      as="main"
       w={474}
       minH={544}
       mt={28}
