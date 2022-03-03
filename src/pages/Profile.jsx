@@ -8,28 +8,28 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import Card from "../components/Card";
+
+const user = {
+  avatar: "https://bit.ly/dan-abramov",
+  name: "Dan Abramov",
+  bio: "I am a software developer and a big fan of devchallenges...",
+  phone: "908249274292",
+  email: "dan.abramov@gmail.com",
+  password: "************",
+};
 
 const Profile = function () {
-  // maxW=1024px
+  const handleClick = function () {
+    console.log("click");
+  };
+
   return (
     <Container maxW="container.lg" mt={4} textAlign="center">
       <Heading as="h1">Personal Info</Heading>
       <Text fontSize="lg">Basic info such as name and photo</Text>
 
-      <VStack
-        as="main"
-        w={845}
-        mx="auto"
-        mt={8}
-        p={8}
-        border="1px"
-        borderColor="gray.200"
-        borderRadius={12}
-        alignItems="stretch"
-        divider={<StackDivider mt={12} borderColor="gray.200" />}
-        spacing={5}
-      >
-        {/* heading */}
+      <Card>
         <Flex justifyContent="space-between" alignItems="center">
           <Flex flexDirection="column" textAlign="left">
             <Text fontSize="2xl">Profile</Text>
@@ -37,11 +37,15 @@ const Profile = function () {
               Some info may be visible to other people
             </Text>
           </Flex>
-          <Button variant="outline" colorScheme="blue" w={24}>
+          <Button
+            variant="outline"
+            colorScheme="blue"
+            w={24}
+            onClick={handleClick}
+          >
             Edit
           </Button>
         </Flex>
-        {/* photo */}
         <Flex alignItems="center" textAlign="left">
           <Text
             w="33.3%"
@@ -54,12 +58,11 @@ const Profile = function () {
           </Text>
           <Avatar
             size="lg"
-            name="Dan Abramov"
-            src="https://bit.ly/dan-abramov"
+            name={user.name}
+            src={user.avatar}
             borderRadius={8}
           />
         </Flex>
-        {/* name */}
         <Flex alignItems="center" textAlign="left">
           <Text
             w="33.3%"
@@ -71,10 +74,9 @@ const Profile = function () {
             NAME
           </Text>
           <Text fontWeight="medium" fontSize="lg">
-            Xanthe Neal
+            {user.name}
           </Text>
         </Flex>
-        {/* bio */}
         <Flex alignItems="center" textAlign="left">
           <Text
             w="33.3%"
@@ -86,10 +88,9 @@ const Profile = function () {
             BIO
           </Text>
           <Text fontWeight="medium" fontSize="lg">
-            I am a software developer and a big fan of devchallenges...
+            {user.bio}
           </Text>
         </Flex>
-        {/* phone */}
         <Flex alignItems="center" textAlign="left">
           <Text
             w="33.3%"
@@ -101,10 +102,9 @@ const Profile = function () {
             PHONE
           </Text>
           <Text fontWeight="medium" fontSize="lg">
-            908249274292
+            {user.phone}
           </Text>
         </Flex>
-        {/* email */}
         <Flex alignItems="center" textAlign="left">
           <Text
             w="33.3%"
@@ -116,10 +116,9 @@ const Profile = function () {
             EMAIL
           </Text>
           <Text fontWeight="medium" fontSize="lg">
-            xanthe.neal@gmail.com
+            {user.email}
           </Text>
         </Flex>
-        {/* password */}
         <Flex alignItems="center" textAlign="left">
           <Text
             w="33.3%"
@@ -131,10 +130,23 @@ const Profile = function () {
             PASSWORD
           </Text>
           <Text fontWeight="medium" fontSize="lg">
-            ************
+            {user.password}
           </Text>
         </Flex>
-      </VStack>
+      </Card>
+
+      {/* <VStack
+        as="main"
+        w={845}
+        m="32px auto 0"
+        p={8}
+        border="1px"
+        borderColor="gray.200"
+        borderRadius={12}
+        alignItems="stretch"
+        divider={<StackDivider mt={12} borderColor="gray.200" />}
+        spacing={5}
+      ></VStack> */}
     </Container>
   );
 };

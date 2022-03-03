@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
+import ChangeInfo from "./pages/ChangeInfo";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:id" element={<Profile />} />
+        <Route path="/change/:id" element={<ChangeInfo />} />
         {/* <Route path="*" element={} /> */}
       </Routes>
     </>

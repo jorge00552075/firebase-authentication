@@ -14,6 +14,10 @@ import { ReactComponent as Logo } from "../assets/devchallenges.svg";
 import { TriangleDownIcon } from "@chakra-ui/icons";
 
 const Header = function () {
+  const handleClick = function () {
+    console.log("click");
+  };
+
   return (
     <Container maxW="container.xl">
       <Flex
