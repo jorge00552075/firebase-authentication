@@ -1,50 +1,32 @@
-import {
-  Avatar,
-  Button,
-  Container,
-  Flex,
-  Heading,
-  StackDivider,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { useParams } from "react-router-dom";
+import { Avatar, Container, Flex, Heading, Link, Text } from "@chakra-ui/react";
+import { Link as ReachLink } from "react-router-dom";
 import Card from "../components/Card";
+import user from "../data/data";
 
-const user = {
-  avatar: "https://bit.ly/dan-abramov",
-  name: "Dan Abramov",
-  bio: "I am a software developer and a big fan of devchallenges...",
-  phone: "908249274292",
-  email: "dan.abramov@gmail.com",
-  password: "************",
-};
-
-const Profile = function () {
-  const handleClick = function () {
-    console.log("click");
-  };
+const Account = function () {
+  const { id } = useParams();
 
   return (
     <Container maxW="container.lg" mt={4} textAlign="center">
       <Heading as="h1">Personal Info</Heading>
       <Text fontSize="lg">Basic info such as name and photo</Text>
-
       <Card>
         <Flex justifyContent="space-between" alignItems="center">
           <Flex flexDirection="column" textAlign="left">
-            <Text fontSize="2xl">Profile</Text>
+            <Text fontSize="2xl">Account</Text>
             <Text fontSize="sm" letterSpacing="wide">
               Some info may be visible to other people
             </Text>
           </Flex>
-          <Button
-            variant="outline"
-            colorScheme="blue"
-            w={24}
-            onClick={handleClick}
+          <Link
+            as={ReachLink}
+            to={`/${id}/edit`}
+            fontWeight="medium"
+            color="blue.500"
           >
             Edit
-          </Button>
+          </Link>
         </Flex>
         <Flex alignItems="center" textAlign="left">
           <Text
@@ -134,21 +116,8 @@ const Profile = function () {
           </Text>
         </Flex>
       </Card>
-
-      {/* <VStack
-        as="main"
-        w={845}
-        m="32px auto 0"
-        p={8}
-        border="1px"
-        borderColor="gray.200"
-        borderRadius={12}
-        alignItems="stretch"
-        divider={<StackDivider mt={12} borderColor="gray.200" />}
-        spacing={5}
-      ></VStack> */}
     </Container>
   );
 };
 
-export default Profile;
+export default Account;

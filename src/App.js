@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./pages/Home";
-import Profile from "./pages/Profile";
-import ChangeInfo from "./pages/ChangeInfo";
+import Account from "./pages/Account";
+import EditPage from "./pages/EditPage";
 
 function App() {
   return (
@@ -10,8 +10,8 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/:id" element={<Profile />} />
-        <Route path="/change/:id" element={<ChangeInfo />} />
+        <Route path="/:id" element={<Account />} />
+        <Route path="/:id/edit" element={<EditPage />} />
         {/* <Route path="*" element={} /> */}
       </Routes>
     </>
@@ -19,3 +19,7 @@ function App() {
 }
 
 export default App;
+// path="/", LoginPage (if not authenticated)
+// reroute to path="/:accountId", AccountPage (if authenticated)
+// path="/:accountId", AccountPage
+// path="/:accountId/editInfo", EditPage
