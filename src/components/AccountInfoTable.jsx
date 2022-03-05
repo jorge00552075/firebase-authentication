@@ -1,14 +1,14 @@
 import { useParams } from "react-router-dom";
 import { Avatar, Container, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { Link as ReachLink } from "react-router-dom";
-import Card from "../components/Card";
+import Card from "./Card";
 import user from "../data/data";
 
-const Account = function () {
+const DataTable = function () {
   const { id } = useParams();
 
   return (
-    <Container maxW="container.lg" mt={4} textAlign="center">
+    <Container as="main" maxW="container.lg" mt={4} textAlign="center">
       <Heading as="h1">Personal Info</Heading>
       <Text fontSize="lg">Basic info such as name and photo</Text>
       <Card>
@@ -120,4 +120,4 @@ const Account = function () {
   );
 };
 
-export default Account;
+export default DataTable;

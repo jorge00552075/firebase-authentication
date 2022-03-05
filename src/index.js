@@ -3,13 +3,13 @@ import App from "./App";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./theme/index";
 import "./theme/styles.css";
-import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./context/auth-context";
 
 render(
-  <ChakraProvider theme={theme}>
-    <BrowserRouter>
+  <AuthProvider>
+    <ChakraProvider theme={theme}>
       <App />
-    </BrowserRouter>
-  </ChakraProvider>,
+    </ChakraProvider>
+  </AuthProvider>,
   document.getElementById("root")
 );

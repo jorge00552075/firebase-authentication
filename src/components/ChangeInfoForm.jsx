@@ -15,14 +15,14 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Link as ReachLink } from "react-router-dom";
-import Card from "../components/Card";
+import Card from "./Card";
 import user from "../data/data";
 
-const EditPage = function () {
+const ChangeInfoForm = function () {
   const { id } = useParams();
 
   const handleSubmit = function () {
-    // ...
+    // updateUser
   };
 
   return (
@@ -134,4 +134,4 @@ const EditPage = function () {
   );
 };
 
-export default EditPage;
+export default ChangeInfoForm;

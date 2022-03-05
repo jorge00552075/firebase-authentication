@@ -12,10 +12,14 @@ import {
 } from "@chakra-ui/react";
 import { ReactComponent as Logo } from "../assets/devchallenges.svg";
 import { TriangleDownIcon } from "@chakra-ui/icons";
+import { useContext } from "react";
+import AuthContext from "../context/auth-context";
 
 const Header = function () {
+  const context = useContext(AuthContext);
+
   const handleClick = function () {
-    console.log("click");
+    context.logout();
   };
 
   return (
@@ -41,7 +45,11 @@ const Header = function () {
               <MenuItem borderRadius={8}>My Profile</MenuItem>
               <MenuItem borderRadius={8}>Group Chat</MenuItem>
               <MenuDivider />
-              <MenuItem borderRadius={8} textColor="red.500">
+              <MenuItem
+                borderRadius={8}
+                textColor="red.500"
+                onClick={handleClick}
+              >
                 Logout
               </MenuItem>
             </MenuList>
