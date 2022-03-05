@@ -17,6 +17,7 @@ import AuthContext from "../context/auth-context";
 
 const Header = function () {
   const context = useContext(AuthContext);
+  const { name } = context.user;
 
   const handleClick = function () {
     context.logout();
@@ -33,9 +34,9 @@ const Header = function () {
       >
         <Logo />
         <HStack spacing={6}>
-          <Avatar size="sm" src="" name="Dan Abramov" />
+          <Avatar size="sm" src="" name={name} />
           <Text fontWeight="bold" fontSize="sm" lineHeight={5}>
-            Dan Abramov
+            {name}
           </Text>
           <Menu>
             <MenuButton>

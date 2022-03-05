@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from "react";
+import { useRef, useContext } from "react";
 import { Link as ReachLink, useNavigate } from "react-router-dom";
 import FormWrapper from "./FormWrapper.jsx";
 import AuthContext from "../../context/auth-context.js";
@@ -16,8 +16,7 @@ import {
 } from "@chakra-ui/react";
 
 //////////////////////////////
-const AuthForm = function () {
-  const [createAccount, setCreateAccount] = useState(true);
+const LoginForm = function () {
   const emailRef = useRef();
   const passwordRef = useRef();
   const context = useContext(AuthContext);
@@ -31,46 +30,27 @@ const AuthForm = function () {
     const password = passwordRef.current.value;
     // check if valid
 
-    let url;
-    if (createAccount) {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCubAMl5_9TWsbDQp-zbqVUZLUaKJMLqkk ";
-    } else {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCubAMl5_9TWsbDQp-zbqVUZLUaKJMLqkk";
-    }
-
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          returnSecureToken: true,
-        }),
-      });
+      const response = await fetch(`/api/v1/users/${email}`);
 
-      if (response.ok === false) {
+      if (response.ok !== true) {
         const data = await response.json();
-        throw Error(data.error.message);
+        throw Error(data.message);
       }
 
       const data = await response.json();
-      context.login(data.idToken);
-      // SEND USER DATA BACK
+      // context.login(data.idToken);
+      context.login(data.user);
 
       toast({
         title: "Success",
-        description: "Your account was successfully created 🎉",
+        description: "You were successfully logged in 🎉",
         status: "success",
         duration: 3000,
         isClosable: true,
       });
 
-      navigate("/account", { replace: true });
+      navigate(`/my-account/${data.user.id}`, { replace: true });
     } catch (error) {
       toast({
         title: "Error",
@@ -86,23 +66,21 @@ const AuthForm = function () {
     <FormWrapper>
       <Logo />
       <Heading as="h1" mt={6} fontWeight={600} fontSize="lg" lineHeight="7">
-        Join thousands of learners from around the world.
+        Login
       </Heading>
-      <Text mt={2}>
-        Master web development by making real-life projects. There are multiple
-        paths for you to choose.
-      </Text>
       <form onSubmit={handleSubmit} style={{ marginTop: "24px" }}>
         <FormControl>
           <FormLabel htmlFor="email" hidden>
             Email
           </FormLabel>
           <Input
-            id="email"
             type="email"
+            id="email"
+            name="email"
+            required
+            size="lg"
             placeholder="email"
             ref={emailRef}
-            size="lg"
             borderColor="gray.400"
           />
         </FormControl>
@@ -113,15 +91,18 @@ const AuthForm = function () {
           <Input
             id="password"
             type="password"
+            name="password"
+            required
+            minLength="4"
+            maxLength="60"
+            size="lg"
             placeholder="password"
             ref={passwordRef}
-            size="lg"
             borderColor="gray.400"
           />
         </FormControl>
-        {/* Add loading button */}
         <Button type="submit" w="full" mt={6} colorScheme="blue" size="lg">
-          Start coding now
+          Login
         </Button>
       </form>
       <Text
@@ -148,14 +129,14 @@ const AuthForm = function () {
         letterSpacing="wide"
         lineHeight="5"
       >
-        Already a member?
-        <Link as={ReachLink} to="/login" color="blue.500">
+        Don't have an account yet ?
+        <Link as={ReachLink} to="/sign-up" color="blue.500">
           {" "}
-          Login
+          Register
         </Link>
       </Text>
     </FormWrapper>
   );
 };
 
-export default AuthForm;
+export default LoginForm;

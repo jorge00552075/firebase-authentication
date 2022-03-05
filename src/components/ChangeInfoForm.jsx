@@ -1,4 +1,7 @@
-import { useParams } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "../context/auth-context";
+import { useParams, Link as ReachLink } from "react-router-dom";
+import Card from "./Card";
 import {
   Avatar,
   Box,
@@ -14,11 +17,9 @@ import {
   Textarea,
   VStack,
 } from "@chakra-ui/react";
-import { Link as ReachLink } from "react-router-dom";
-import Card from "./Card";
-import user from "../data/data";
 
 const ChangeInfoForm = function () {
+  const { user } = useContext(AuthContext);
   const { id } = useParams();
 
   const handleSubmit = function () {

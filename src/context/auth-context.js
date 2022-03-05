@@ -1,7 +1,8 @@
 import React, { createContext, useState } from "react";
 
 const AuthContext = createContext({
-  token: "",
+  token: null,
+  user: null,
   isLoggedIn: false,
   login: (token) => {},
   logout: () => {},
@@ -9,19 +10,24 @@ const AuthContext = createContext({
 
 export const AuthProvider = function ({ children }) {
   const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
 
-  const userIsLoggedIn = !!token;
+  // const userIsLoggedIn = !!token;
+  const userIsLoggedIn = !!user;
 
-  const loginHandler = function (token, email) {
-    setToken(token);
+  const loginHandler = function (user) {
+    // setToken(token);
+    setUser(user);
   };
 
   const logoutHandler = function () {
-    setToken(null);
+    // setToken(null);
+    setUser(null);
   };
 
   const value = {
     token: token,
+    user: user,
     isLoggedIn: userIsLoggedIn,
     login: loginHandler,
     logout: logoutHandler,

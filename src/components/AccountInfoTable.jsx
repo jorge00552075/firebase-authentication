@@ -1,11 +1,11 @@
-import { useParams } from "react-router-dom";
 import { Avatar, Container, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { Link as ReachLink } from "react-router-dom";
 import Card from "./Card";
-import user from "../data/data";
+import { useContext } from "react";
+import AuthContext from "../context/auth-context";
 
 const DataTable = function () {
-  const { id } = useParams();
+  const { user } = useContext(AuthContext);
 
   return (
     <Container as="main" maxW="container.lg" mt={4} textAlign="center">
@@ -21,7 +21,7 @@ const DataTable = function () {
           </Flex>
           <Link
             as={ReachLink}
-            to={`/${id}/edit`}
+            to={`/edit-account/${user.id}`}
             fontWeight="medium"
             color="blue.500"
           >

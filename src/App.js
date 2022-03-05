@@ -1,16 +1,19 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AuthPage from "./pages/AuthPage";
-import AccountPage from "./pages/AccountPage";
-import EditAccountPage from "./pages/EditAccountPage";
-import NotFound from "./pages/NotFound";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import SignUpPage from "./pages/SignUpPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import AccountPage from "./pages/AccountPage.jsx";
+import EditAccountPage from "./pages/EditAccountPage.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<AuthPage />} />
-        <Route path="/:id" element={<AccountPage />} />
-        <Route path="/:id/edit" element={<EditAccountPage />} />
+        <Route path="/" element={<Navigate to="/sign-up" />} />
+        <Route path="/sign-up" element={<SignUpPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/my-account/:id" element={<AccountPage />} />
+        <Route path="/edit-account/:id" element={<EditAccountPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
