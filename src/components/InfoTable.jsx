@@ -1,12 +1,10 @@
-import { Avatar, Container, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { Link as ReachLink } from "react-router-dom";
-import Card from "./Card";
-import { useContext } from "react";
-import AuthContext from "../context/auth-context";
+import { Avatar, Container, Flex, Heading, Link, Text } from "@chakra-ui/react";
 
-const DataTable = function () {
-  const { user } = useContext(AuthContext);
+import Card from "./layout/Card.jsx";
+import user from "../data";
 
+const InfoTable = function () {
   return (
     <Container as="main" maxW="container.lg" mt={4} textAlign="center">
       <Heading as="h1">Personal Info</Heading>
@@ -21,7 +19,7 @@ const DataTable = function () {
           </Flex>
           <Link
             as={ReachLink}
-            to={`/edit-account/${user.id}`}
+            to={`/account/${user.id}/update`}
             fontWeight="medium"
             color="blue.500"
           >
@@ -120,4 +118,4 @@ const DataTable = function () {
   );
 };
 
-export default DataTable;
+export default InfoTable;

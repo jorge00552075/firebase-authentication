@@ -1,12 +1,13 @@
 import React from "react";
+
 import Header from "../components/Header.jsx";
-import AccountInfoTable from "../components/AccountInfoTable.jsx";
+import InfoTable from "../components/InfoTable.jsx";
 
 const AccountPage = function () {
   return (
     <React.Fragment>
       <Header />
-      <AccountInfoTable />
+      <InfoTable />
     </React.Fragment>
   );
 };

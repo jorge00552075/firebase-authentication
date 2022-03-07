@@ -1,8 +1,5 @@
-import { useRef, useContext } from "react";
+import { useContext, useRef } from "react";
 import { Link as ReachLink, useNavigate } from "react-router-dom";
-import FormWrapper from "./FormWrapper.jsx";
-import AuthContext from "../../context/auth-context.js";
-import { Google, Facebook, Twitter, Github, Logo } from "../../assets/index";
 import {
   Button,
   Flex,
@@ -15,11 +12,15 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
+import FormWrapper from "../layout/FormWrapper.jsx";
+import AuthContext from "../../context/auth/auth-context.jsx";
+import { Google, Facebook, Twitter, Github, Logo } from "../../assets/index";
+
 //////////////////////////////
 const LoginForm = function () {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const context = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -28,19 +29,32 @@ const LoginForm = function () {
 
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    // check if valid
+    // validate inputs
 
     try {
-      const response = await fetch(`/api/v1/users/${email}`);
+      const url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCubAMl5_9TWsbDQp-zbqVUZLUaKJMLqkk ";
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          returnSecureToken: true,
+        }),
+      });
 
       if (response.ok !== true) {
         const data = await response.json();
-        throw Error(data.message);
+        throw Error(data.error.message);
       }
 
       const data = await response.json();
-      // context.login(data.idToken);
-      context.login(data.user);
+      authContext.login(data.idToken);
+      // authentication only, get user data later
 
       toast({
         title: "Success",
@@ -50,7 +64,9 @@ const LoginForm = function () {
         isClosable: true,
       });
 
-      navigate(`/my-account/${data.user.id}`, { replace: true });
+      navigate("/account/39", {
+        replace: true,
+      });
     } catch (error) {
       toast({
         title: "Error",

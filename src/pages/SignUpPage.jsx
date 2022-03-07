@@ -1,7 +1,7 @@
-import CreateAccountForm from "../components/form/CreateAccountForm.jsx";
+import SignUpForm from "../components/form/SignUpForm.jsx";
 
 const SignUpPage = function () {
-  return <CreateAccountForm />;
+  return <SignUpForm />;
 };
 
 export default SignUpPage;

@@ -1,7 +1,4 @@
-import { useContext } from "react";
-import AuthContext from "../context/auth-context";
-import { useParams, Link as ReachLink } from "react-router-dom";
-import Card from "./Card";
+import { Link as ReachLink } from "react-router-dom";
 import {
   Avatar,
   Box,
@@ -18,17 +15,17 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-const ChangeInfoForm = function () {
-  const { user } = useContext(AuthContext);
-  const { id } = useParams();
+import Card from "../layout/Card.jsx";
+import user from "../../data";
 
+const ChangeForm = function () {
   const handleSubmit = function () {
-    // updateUser
+    // ...
   };
 
   return (
     <Container maxW="container.lg" mt={4}>
-      <Link as={ReachLink} to={`/${id}`}>
+      <Link as={ReachLink} to={`/account/${user.id}`}>
         &larr; Back
       </Link>
       <Card>
@@ -46,7 +43,6 @@ const ChangeInfoForm = function () {
             Changes will be reflected to every service
           </Text>
         </Box>
-
         <Flex alignItems="center" gap={6}>
           <Avatar
             size="lg"
@@ -63,7 +59,6 @@ const ChangeInfoForm = function () {
             CHANGE PHOTO
           </Text>
         </Flex>
-
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} w={416}>
             <FormControl>
@@ -135,4 +130,4 @@ const ChangeInfoForm = function () {
   );
 };
 
-export default ChangeInfoForm;
+export default ChangeForm;

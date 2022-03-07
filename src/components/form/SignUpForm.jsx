@@ -1,43 +1,63 @@
-import { useRef, useContext } from "react";
+import { useContext, useRef } from "react";
 import { Link as ReachLink, useNavigate } from "react-router-dom";
-import FormWrapper from "./FormWrapper.jsx";
-import AuthContext from "../../context/auth-context.js";
-import { Google, Facebook, Twitter, Github, Logo } from "../../assets/index";
-// prettier-ignore
 import {
-  Button, Flex, FormControl, FormLabel, Heading, Input, Link, Text, useToast
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Link,
+  Text,
+  useToast,
 } from "@chakra-ui/react";
 
+import FormWrapper from "../layout/FormWrapper.jsx";
+import AuthContext from "../../context/auth/auth-context.jsx";
+
+import { Google, Facebook, Twitter, Github, Logo } from "../../assets/index";
+
 //////////////////////////////
-const CreateAccountForm = function () {
+const SignUpForm = function () {
+  // hooks
+  const authContext = useContext(AuthContext);
   const emailRef = useRef();
   const passwordRef = useRef();
-  const context = useContext(AuthContext);
   const navigate = useNavigate();
   const toast = useToast();
 
+  // event handlers
   const handleSubmit = async function (e) {
     e.preventDefault();
 
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    // check if valid
+    // validate inputs
 
     try {
-      const response = await fetch("/api/v1/users", {
+      const url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCubAMl5_9TWsbDQp-zbqVUZLUaKJMLqkk";
+
+      const response = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          returnSecureToken: true,
+        }),
       });
 
       if (response.ok !== true) {
         const data = await response.json();
-        throw Error(data.message);
+        throw Error(data.error.message);
       }
 
       const data = await response.json();
-      // context.login(data.idToken);
-      context.login(data.user);
+      authContext.login(data.idToken);
+      // authentication only, get user data later
 
       toast({
         title: "Success",
@@ -47,7 +67,9 @@ const CreateAccountForm = function () {
         isClosable: true,
       });
 
-      navigate(`/my-account/${data.user.id}`, { replace: true });
+      navigate("/my-account/39", {
+        replace: true,
+      });
     } catch (error) {
       toast({
         title: "Error",
@@ -70,32 +92,27 @@ const CreateAccountForm = function () {
         paths for you to choose.
       </Text>
       <form onSubmit={handleSubmit} style={{ marginTop: "24px" }}>
-        <FormControl>
+        <FormControl isRequired>
           <FormLabel htmlFor="email" hidden>
             Email
           </FormLabel>
           <Input
             type="email"
             id="email"
-            name="email"
-            required
             size="lg"
             placeholder="email"
             ref={emailRef}
             borderColor="gray.400"
           />
         </FormControl>
-        <FormControl mt={4}>
+        <FormControl isRequired mt={4}>
           <FormLabel htmlFor="password" hidden>
             Password
           </FormLabel>
           <Input
             type="password"
             id="password"
-            name="password"
-            required
             minLength="4"
-            maxLength="60"
             size="lg"
             placeholder="password"
             ref={passwordRef}
@@ -140,4 +157,4 @@ const CreateAccountForm = function () {
   );
 };
 
-export default CreateAccountForm;
+export default SignUpForm;

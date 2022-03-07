@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import {
   Avatar,
   Container,
@@ -10,17 +11,17 @@ import {
   MenuList,
   Text,
 } from "@chakra-ui/react";
-import { ReactComponent as Logo } from "../assets/devchallenges.svg";
 import { TriangleDownIcon } from "@chakra-ui/icons";
-import { useContext } from "react";
-import AuthContext from "../context/auth-context";
+
+import AuthContext from "../context/auth/auth-context";
+import { ReactComponent as Logo } from "../assets/devchallenges.svg";
+import user from "../data";
 
 const Header = function () {
-  const context = useContext(AuthContext);
-  const { name } = context.user;
+  const authContext = useContext(AuthContext);
 
   const handleClick = function () {
-    context.logout();
+    authContext.logout();
   };
 
   return (
@@ -34,9 +35,9 @@ const Header = function () {
       >
         <Logo />
         <HStack spacing={6}>
-          <Avatar size="sm" src="" name={name} />
+          <Avatar size="sm" src="" name={user.name} />
           <Text fontWeight="bold" fontSize="sm" lineHeight={5}>
-            {name}
+            {user.name}
           </Text>
           <Menu>
             <MenuButton>

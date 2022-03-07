@@ -1,20 +1,32 @@
+import { useContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+import AuthContext from "./context/auth/auth-context.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import AccountPage from "./pages/AccountPage.jsx";
-import EditAccountPage from "./pages/EditAccountPage.jsx";
-import NotFound from "./pages/NotFound.jsx";
+import AccountUpdatePage from "./pages/AccountUpdatePage.jsx";
 
 function App() {
+  const authContext = useContext(AuthContext);
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/sign-up" />} />
-        <Route path="/sign-up" element={<SignUpPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/my-account/:id" element={<AccountPage />} />
-        <Route path="/edit-account/:id" element={<EditAccountPage />} />
-        <Route path="*" element={<NotFound />} />
+        {
+          // Protected Route
+          authContext.isLoggedIn && (
+            <Route path="/account/:id" element={<AccountPage />} />
+          )
+        }
+        {
+          // Protected Route
+          authContext.isLoggedIn && (
+            <Route path="/account/:id/update" element={<AccountUpdatePage />} />
+          )
+        }
+        <Route path="*" element={<Navigate to="/signup" />} />
       </Routes>
     </BrowserRouter>
   );
