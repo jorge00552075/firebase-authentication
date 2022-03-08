@@ -1,33 +1,76 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useEffect } from "react";
+import {
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { auth } from "../../firebaseConfig";
 
 const AuthContext = createContext({
-  token: null,
-  isLoggedIn: false,
-  login: (token) => {},
+  user: null,
+  isLoading: false,
+  signUp: (email, password) => {},
+  login: (email, password) => {},
   logout: () => {},
 });
 
 export const AuthProvider = function ({ children }) {
-  const initialToken = localStorage.getItem("token");
-  const [token, setToken] = useState(initialToken);
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const userIsLoggedIn = !!token;
+  useEffect(() => {
+    const unsubAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user.uid);
+      } else {
+        setUser(null);
+      }
+    });
 
-  const loginHandler = function (token) {
-    setToken(token);
-    localStorage.setItem("token", token);
+    return () => unsubAuth();
+  }, []);
+
+  const handleSignUp = async (email, password) => {
+    setIsLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setUser(userCredential.user.uid);
+      setIsLoading(false);
+    } catch (err) {
+      console.error(err);
+      setIsLoading(false);
+    }
   };
 
-  const logoutHandler = function () {
-    setToken(null);
-    localStorage.removeItem("token");
+  const handleLogin = async (email, password) => {
+    setIsLoading(true);
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setUser(userCredential.user.uid);
+      setIsLoading(false);
+    } catch (err) {
+      console.error(err);
+      setIsLoading(false);
+    }
   };
+
+  const handleLogout = () => signOut(auth);
 
   const value = {
-    token: token,
-    isLoggedIn: userIsLoggedIn,
-    login: loginHandler,
-    logout: logoutHandler,
+    user: user,
+    isLoading: isLoading,
+    signUp: handleSignUp,
+    login: handleLogin,
+    logout: handleLogout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -32,29 +32,7 @@ const LoginForm = function () {
     // validate inputs
 
     try {
-      const url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCubAMl5_9TWsbDQp-zbqVUZLUaKJMLqkk ";
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          returnSecureToken: true,
-        }),
-      });
-
-      if (response.ok !== true) {
-        const data = await response.json();
-        throw Error(data.error.message);
-      }
-
-      const data = await response.json();
-      authContext.login(data.idToken);
-      // authentication only, get user data later
+      authContext.login(email, password);
 
       toast({
         title: "Success",
@@ -64,9 +42,7 @@ const LoginForm = function () {
         isClosable: true,
       });
 
-      navigate("/account/39", {
-        replace: true,
-      });
+      navigate("/account/0", { replace: true });
     } catch (error) {
       toast({
         title: "Error",

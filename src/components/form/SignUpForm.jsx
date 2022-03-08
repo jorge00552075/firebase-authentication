@@ -30,34 +30,12 @@ const SignUpForm = function () {
   const handleSubmit = async function (e) {
     e.preventDefault();
 
+    // validate inputs
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    // validate inputs
 
     try {
-      const url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCubAMl5_9TWsbDQp-zbqVUZLUaKJMLqkk";
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          returnSecureToken: true,
-        }),
-      });
-
-      if (response.ok !== true) {
-        const data = await response.json();
-        throw Error(data.error.message);
-      }
-
-      const data = await response.json();
-      authContext.login(data.idToken);
-      // authentication only, get user data later
+      authContext.signUp(email, password);
 
       toast({
         title: "Success",
@@ -67,9 +45,8 @@ const SignUpForm = function () {
         isClosable: true,
       });
 
-      navigate("/my-account/39", {
-        replace: true,
-      });
+      // get user uid
+      navigate("/account/0", { replace: true });
     } catch (error) {
       toast({
         title: "Error",

@@ -25,7 +25,7 @@ const ChangeForm = function () {
 
   return (
     <Container maxW="container.lg" mt={4}>
-      <Link as={ReachLink} to={`/account/${user.id}`}>
+      <Link as={ReachLink} to={"/account/0"}>
         &larr; Back
       </Link>
       <Card>

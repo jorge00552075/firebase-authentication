@@ -19,7 +19,7 @@ const InfoTable = function () {
           </Flex>
           <Link
             as={ReachLink}
-            to={`/account/${user.id}/update`}
+            to={"/account/0/update"}
             fontWeight="medium"
             color="blue.500"
           >
