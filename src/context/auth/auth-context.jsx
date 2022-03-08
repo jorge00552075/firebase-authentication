@@ -5,7 +5,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { auth } from "../../firebaseConfig";
+import { addDoc, collection } from "firebase/firestore";
+import { auth, db } from "../../firebaseConfig";
 
 const AuthContext = createContext({
   user: null,
@@ -19,10 +20,14 @@ export const AuthProvider = function ({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // collection ref
+  const colRef = collection(db, "users");
+
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user.uid);
+        console.log("user is authenticated");
       } else {
         setUser(null);
       }
@@ -34,12 +39,27 @@ export const AuthProvider = function ({ children }) {
   const handleSignUp = async (email, password) => {
     setIsLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(
+      // Create user auth
+      const { user } = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      setUser(userCredential.user.uid);
+
+      const userData = {
+        uid: user.uid,
+        avatar: "",
+        name: "",
+        bio: "",
+        phone: 5555555555,
+        email: user.email,
+        password: "************",
+      };
+
+      // Create user data
+      await addDoc(colRef, userData);
+
+      setUser(userData);
       setIsLoading(false);
     } catch (err) {
       console.error(err);
@@ -55,6 +75,7 @@ export const AuthProvider = function ({ children }) {
         email,
         password
       );
+
       setUser(userCredential.user.uid);
       setIsLoading(false);
     } catch (err) {

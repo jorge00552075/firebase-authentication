@@ -1,10 +1,13 @@
+import { useContext } from "react";
 import { Link as ReachLink } from "react-router-dom";
 import { Avatar, Container, Flex, Heading, Link, Text } from "@chakra-ui/react";
 
+import AuthContext from "../context/auth/auth-context.jsx";
 import Card from "./layout/Card.jsx";
-import user from "../data";
 
 const InfoTable = function () {
+  const authContext = useContext(AuthContext);
+  const user = authContext.user;
   return (
     <Container as="main" maxW="container.lg" mt={4} textAlign="center">
       <Heading as="h1">Personal Info</Heading>

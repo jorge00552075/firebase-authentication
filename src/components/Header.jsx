@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Avatar,
   Container,
@@ -15,11 +16,10 @@ import { TriangleDownIcon } from "@chakra-ui/icons";
 
 import AuthContext from "../context/auth/auth-context";
 import { ReactComponent as Logo } from "../assets/devchallenges.svg";
-import user from "../data";
-import { useNavigate } from "react-router-dom";
 
 const Header = function () {
   const authContext = useContext(AuthContext);
+  const user = authContext.user;
   const navigate = useNavigate();
 
   const handleClick = function () {
