@@ -46,7 +46,7 @@ const SignUpForm = function () {
       });
 
       // get user uid
-      navigate("/account/0", { replace: true });
+      navigate("/account", { replace: true });
     } catch (error) {
       toast({
         title: "Error",

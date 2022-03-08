@@ -24,7 +24,7 @@ const Header = function () {
 
   const handleClick = function () {
     authContext.logout();
-    navigate("/signUp", { replace: true });
+    navigate("/signup", { replace: true });
   };
 
   return (

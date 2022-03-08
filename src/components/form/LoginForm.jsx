@@ -42,7 +42,7 @@ const LoginForm = function () {
         isClosable: true,
       });
 
-      navigate("/account/0", { replace: true });
+      navigate("/account", { replace: true });
     } catch (error) {
       toast({
         title: "Error",
@@ -122,7 +122,7 @@ const LoginForm = function () {
         lineHeight="5"
       >
         Don't have an account yet ?
-        <Link as={ReachLink} to="/sign-up" color="blue.500">
+        <Link as={ReachLink} to="/signup" color="blue.500">
           {" "}
           Register
         </Link>
