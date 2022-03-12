@@ -16,7 +16,6 @@ const NotFound = function () {
       <Text fontSize="xl" fontWeight="medium">
         We couldn't find that page!
       </Text>
-
       <Link as={ReachLink} to="/signup" fontSize="xl" fontWeight="medium">
         &larr; Home
       </Link>

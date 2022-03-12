@@ -1,5 +1,5 @@
 import { useContext, useRef } from "react";
-import { Link as ReachLink, useNavigate } from "react-router-dom";
+import { Link as ReachLink } from "react-router-dom";
 import {
   Button,
   Flex,
@@ -9,7 +9,6 @@ import {
   Input,
   Link,
   Text,
-  useToast,
 } from "@chakra-ui/react";
 
 import FormWrapper from "../layout/FormWrapper.jsx";
@@ -21,8 +20,6 @@ const LoginForm = function () {
   const emailRef = useRef();
   const passwordRef = useRef();
   const authContext = useContext(AuthContext);
-  const navigate = useNavigate();
-  const toast = useToast();
 
   const handleSubmit = async function (e) {
     e.preventDefault();
@@ -31,27 +28,7 @@ const LoginForm = function () {
     const password = passwordRef.current.value;
     // validate inputs
 
-    try {
-      authContext.login(email, password);
-
-      toast({
-        title: "Success",
-        description: "You were successfully logged in 🎉",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-
-      navigate("/account", { replace: true });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
+    authContext.login(email, password);
   };
 
   return (

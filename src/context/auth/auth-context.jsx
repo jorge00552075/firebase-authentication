@@ -1,11 +1,20 @@
 import React, { useState, createContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { addDoc, collection } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
 
 const AuthContext = createContext({
@@ -19,6 +28,8 @@ const AuthContext = createContext({
 export const AuthProvider = function ({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const toast = useToast();
 
   // collection ref
   const colRef = collection(db, "users");
@@ -35,38 +46,51 @@ export const AuthProvider = function ({ children }) {
 
     return () => unsubAuth();
   }, []);
-
+  /////////////////////////////////////////////////
   const handleSignUp = async (email, password) => {
     setIsLoading(true);
+    // prettier-ignore
     try {
-      // Create user auth
-      const { user } = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
       const userData = {
-        uid: user.uid,
+        uid: userCredential.user.uid,
         avatar: "",
         name: "",
         bio: "",
-        phone: 5555555555,
-        email: user.email,
-        password: "************",
+        phone: "5555555555",
+        email: userCredential.user.email,
+        password: "************"
       };
 
-      // Create user data
-      await addDoc(colRef, userData);
-
-      setUser(userData);
-      setIsLoading(false);
-    } catch (err) {
-      console.error(err);
+      const documentReference = await addDoc(colRef, userData);
+      
+      if (userCredential && documentReference) {
+        setUser(userData);
+        toast({
+          title: "Account created", 
+          description: "We've created your account for you.", 
+          status: "success",
+          duration: 3000,
+          isClosable: true
+        });
+        setIsLoading(false);
+        navigate("/account", { replace: true });
+      } else {
+        throw Error("Oops something went wrong!");
+      }
+    } catch (error) {
+      toast({
+        title: "Error creating account", 
+        description: error.message, 
+        status: "error",
+        duration: 3000,
+        isClosable: true
+      });
       setIsLoading(false);
     }
   };
-
+  ////////////////////////////////////////////////
   const handleLogin = async (email, password) => {
     setIsLoading(true);
     try {
@@ -76,10 +100,32 @@ export const AuthProvider = function ({ children }) {
         password
       );
 
-      setUser(userCredential.user.uid);
+      const q = query(colRef, where("uid", "==", userCredential.user.uid));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        if (!doc.data()) {
+          throw Error("Oops something went wrong.");
+        }
+        setUser(doc.data());
+      });
+
+      toast({
+        title: "Account created",
+        description: "We've created your account for you.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
       setIsLoading(false);
-    } catch (err) {
-      console.error(err);
+      navigate("/account", { replace: true });
+    } catch (error) {
+      toast({
+        title: "Error creating account",
+        description: error.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       setIsLoading(false);
     }
   };

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Center, Spinner } from "@chakra-ui/react";
 import AuthContext from "./context/auth/auth-context.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
@@ -21,18 +21,16 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        {isAuthenticated && <Route path="/account" element={<AccountPage />} />}
-        {isAuthenticated && (
-          <Route path="/account/update" element={<AccountUpdatePage />} />
-        )}
-        <Route path="/" element={<Navigate to="/signup" />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      {isAuthenticated && <Route path="/account" element={<AccountPage />} />}
+      {isAuthenticated && (
+        <Route path="/account/update" element={<AccountUpdatePage />} />
+      )}
+      <Route path="/" element={<Navigate to="/signup" />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 
