@@ -7,14 +7,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import {
-  addDoc,
-  collection,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
 
 const AuthContext = createContext({
@@ -46,7 +39,7 @@ export const AuthProvider = function ({ children }) {
 
     return () => unsubAuth();
   }, []);
-  /////////////////////////////////////////////////
+
   const handleSignUp = async (email, password) => {
     setIsLoading(true);
     // prettier-ignore
@@ -90,7 +83,7 @@ export const AuthProvider = function ({ children }) {
       setIsLoading(false);
     }
   };
-  ////////////////////////////////////////////////
+
   const handleLogin = async (email, password) => {
     setIsLoading(true);
     try {
