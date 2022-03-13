@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { Link as ReachLink } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import {
   Avatar,
   Box,
@@ -15,12 +17,17 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
+import AuthContext from "../../context/auth/auth-context.jsx";
 import Card from "../layout/Card.jsx";
 import user from "../../data";
 
 const ChangeForm = function () {
-  const handleSubmit = function () {
-    // ...
+  const authContext = useContext(AuthContext);
+  const { register, handleSubmit } = useForm();
+
+  const onSubmit = function (data) {
+    // console.log(data);
+    authContext.updateUser(data);
   };
 
   return (
@@ -59,9 +66,9 @@ const ChangeForm = function () {
             CHANGE PHOTO
           </Text>
         </Flex>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <VStack spacing={4} w={416}>
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel htmlFor="name" fontSize="sm" letterSpacing="wide">
                 Name
               </FormLabel>
@@ -71,9 +78,10 @@ const ChangeForm = function () {
                 placeholder="Enter your name"
                 size="lg"
                 borderColor="gray.400"
+                {...register("name")}
               />
             </FormControl>
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel htmlFor="bio" fontSize="sm" letterSpacing="wide">
                 Bio
               </FormLabel>
@@ -82,9 +90,10 @@ const ChangeForm = function () {
                 placeholder="Enter your bio"
                 size="lg"
                 borderColor="gray.400"
+                {...register("bio")}
               />
             </FormControl>
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel htmlFor="phone" fontSize="sm" letterSpacing="wide">
                 Phone
               </FormLabel>
@@ -94,9 +103,10 @@ const ChangeForm = function () {
                 placeholder="Enter your phone"
                 size="lg"
                 borderColor="gray.400"
+                {...register("phone")}
               />
             </FormControl>
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel htmlFor="email" fontSize="sm" letterSpacing="wide">
                 Email
               </FormLabel>
@@ -106,9 +116,10 @@ const ChangeForm = function () {
                 placeholder="Enter your email"
                 size="lg"
                 borderColor="gray.400"
+                {...register("email")}
               />
             </FormControl>
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel htmlFor="password" fontSize="sm" letterSpacing="wide">
                 Password
               </FormLabel>
@@ -118,10 +129,11 @@ const ChangeForm = function () {
                 placeholder="Enter your password"
                 size="lg"
                 borderColor="gray.400"
+                {...register("password")}
               />
             </FormControl>
           </VStack>
-          <Button colorScheme="blue" mt={4}>
+          <Button type="submit" colorScheme="blue" mt={4}>
             Save
           </Button>
         </form>

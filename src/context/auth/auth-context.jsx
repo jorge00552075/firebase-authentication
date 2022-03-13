@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import {
@@ -7,7 +7,14 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
 
 const AuthContext = createContext({
@@ -16,29 +23,47 @@ const AuthContext = createContext({
   signUp: (email, password) => {},
   login: (email, password) => {},
   logout: () => {},
+  updateUser: (data) => {},
 });
 
 export const AuthProvider = function ({ children }) {
+  // hooks
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
 
-  // collection ref
-  const colRef = collection(db, "users");
-
+  // subscribe to authentication changes
   useEffect(() => {
-    const unsubAuth = onAuthStateChanged(auth, (user) => {
+    const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
+        console.log("✅ Authenticated === true");
         setUser(user.uid);
-        console.log("user is authenticated");
       } else {
+        console.log("❌ Authenticated === false");
         setUser(null);
       }
     });
 
-    return () => unsubAuth();
+    // unsubscribe to changes
+    return () => unsub();
   }, []);
+
+  // Subscribe to document changes
+  let docRef;
+  if (user && user.uid) {
+    docRef = doc(db, "users", user.uid);
+  }
+
+  useEffect(() => {
+    if (!docRef) return;
+    const unsub = onSnapshot(docRef, (doc) => {
+      setUser(doc.data());
+    });
+
+    // unsubscribe to changes
+    return () => unsub();
+  }, [docRef]);
 
   const handleSignUp = async (email, password) => {
     setIsLoading(true);
@@ -56,9 +81,9 @@ export const AuthProvider = function ({ children }) {
         password: "************"
       };
 
-      const documentReference = await addDoc(colRef, userData);
+      await setDoc(doc(db, "users", userCredential.user.uid), userData);
       
-      if (userCredential && documentReference) {
+      if (userCredential) {
         setUser(userData);
         toast({
           title: "Account created", 
@@ -92,16 +117,15 @@ export const AuthProvider = function ({ children }) {
         email,
         password
       );
+      const docRef = doc(db, "users", userCredential.user.uid);
+      const docSnap = await getDoc(docRef);
 
-      const q = query(colRef, where("uid", "==", userCredential.user.uid));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        if (!doc.data()) {
-          throw Error("Oops something went wrong.");
-        }
-        setUser(doc.data());
-      });
-
+      if (docSnap.exists()) {
+        setUser(docSnap.data());
+      } else {
+        console.log("No such document!");
+        // show error message
+      }
       toast({
         title: "Account created",
         description: "We've created your account for you.",
@@ -125,12 +149,28 @@ export const AuthProvider = function ({ children }) {
 
   const handleLogout = () => signOut(auth);
 
+  const updateUser = async function (data) {
+    const docRef = doc(db, "users", user.uid);
+    await updateDoc(docRef, data);
+    // update state
+
+    toast({
+      title: "Success",
+      description: "You successfully updated your account 🎉",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+    navigate("/account", { replace: true });
+  };
+
   const value = {
     user: user,
     isLoading: isLoading,
     signUp: handleSignUp,
     login: handleLogin,
     logout: handleLogout,
+    updateUser: updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
