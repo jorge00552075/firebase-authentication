@@ -1,13 +1,13 @@
-import { useContext } from "react";
-import { Link as ReachLink } from "react-router-dom";
-import { Avatar, Container, Flex, Heading, Link, Text } from "@chakra-ui/react";
+import { useContext } from 'react';
+import { Link as ReachLink } from 'react-router-dom';
+import { Avatar, Container, Flex, Heading, Link, Text } from '@chakra-ui/react';
 
-import AuthContext from "../context/auth/auth-context.jsx";
-import Card from "./layout/Card.jsx";
+import AuthContext from '../context/auth-context.jsx';
+import Card from './layout/Card.jsx';
 
 const InfoTable = function () {
-  const authContext = useContext(AuthContext);
-  const user = authContext.user;
+  const { user } = useContext(AuthContext);
+
   return (
     <Container as="main" maxW="container.lg" mt={4} textAlign="center">
       <Heading as="h1">Personal Info</Heading>
@@ -22,7 +22,7 @@ const InfoTable = function () {
           </Flex>
           <Link
             as={ReachLink}
-            to={"/account/update"}
+            to={'/profile/update'}
             fontWeight="medium"
             color="blue.500"
           >
@@ -42,7 +42,7 @@ const InfoTable = function () {
           <Avatar
             size="lg"
             name={user.name}
-            src={user.avatar}
+            src={user.photoURL}
             borderRadius={8}
           />
         </Flex>
@@ -113,7 +113,7 @@ const InfoTable = function () {
             PASSWORD
           </Text>
           <Text fontWeight="medium" fontSize="lg">
-            {user.password}
+            {user?.password?.replaceAll(/[a-z0-9]/g, '*') || ''}
           </Text>
         </Flex>
       </Card>

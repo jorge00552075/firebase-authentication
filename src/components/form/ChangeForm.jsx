@@ -1,38 +1,35 @@
-import { useContext } from "react";
-import { Link as ReachLink } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Flex,
-  FormControl,
-  FormLabel,
-  Heading,
-  Input,
-  Link,
-  Text,
-  Textarea,
-  VStack,
-} from "@chakra-ui/react";
-
-import AuthContext from "../../context/auth/auth-context.jsx";
-import Card from "../layout/Card.jsx";
-import user from "../../data";
+import { useContext } from 'react';
+import { Link as ReachLink } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+// prettier-ignore
+import { Avatar, Box, Button, Container, Flex, FormControl, FormLabel, Heading, Input,Link, Text, Textarea,VStack } from '@chakra-ui/react';
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import AuthContext from '../../context/auth-context.jsx';
+import Card from '../layout/Card.jsx';
 
 const ChangeForm = function () {
-  const authContext = useContext(AuthContext);
-  const { register, handleSubmit } = useForm();
+  const { user, updateUser } = useContext(AuthContext);
+  const { register, handleSubmit } = useForm({
+    defaultValues: user,
+  });
 
   const onSubmit = function (data) {
-    // console.log(data);
-    authContext.updateUser(data);
+    updateUser(data);
+  };
+
+  const handleChange = async function (e) {
+    const file = e.target.files[0];
+    const firebaseStorage = getStorage();
+    const storageReference = ref(firebaseStorage, `avatars/${file.name}`);
+    await uploadBytes(storageReference, file);
+    const downloadURL = await getDownloadURL(storageReference);
+
+    updateUser({ ...user, photoURL: downloadURL });
   };
 
   return (
     <Container maxW="container.lg" mt={4}>
-      <Link as={ReachLink} to={"/account"}>
+      <Link as={ReachLink} to={'/profile'}>
         &larr; Back
       </Link>
       <Card>
@@ -50,25 +47,40 @@ const ChangeForm = function () {
             Changes will be reflected to every service
           </Text>
         </Box>
-        <Flex alignItems="center" gap={6}>
-          <Avatar
-            size="lg"
-            name={user.name}
-            src={user.avatar}
-            borderRadius={8}
-          />
-          <Text
-            fontWeight="medium"
-            fontSize="sm"
-            textColor="gray.400"
-            letterSpacing="wide"
-          >
-            CHANGE PHOTO
-          </Text>
-        </Flex>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <VStack spacing={4} w={416}>
-            <FormControl isRequired>
+          <VStack spacing={4} w={416} alignItems="flex-start">
+            <Flex alignItems="center" gap={6}>
+              <Avatar
+                width={'72px'}
+                height={'72px'}
+                name={user.name}
+                src={user.photoURL}
+                borderRadius={8}
+              />
+              <FormControl>
+                <FormLabel
+                  htmlFor="file"
+                  margin={0}
+                  fontWeight="medium"
+                  fontSize="sm"
+                  color="gray.600"
+                  letterSpacing="wide"
+                  textTransform="uppercase"
+                  cursor="pointer"
+                >
+                  change photo
+                </FormLabel>
+                <Input
+                  type="file"
+                  id="file"
+                  name="file"
+                  onChange={handleChange}
+                  display="none"
+                />
+              </FormControl>
+            </Flex>
+
+            <FormControl>
               <FormLabel htmlFor="name" fontSize="sm" letterSpacing="wide">
                 Name
               </FormLabel>
@@ -77,11 +89,11 @@ const ChangeForm = function () {
                 type="text"
                 placeholder="Enter your name"
                 size="lg"
-                borderColor="gray.400"
-                {...register("name")}
+                borderColor="gray.600"
+                {...register('name')}
               />
             </FormControl>
-            <FormControl isRequired>
+            <FormControl>
               <FormLabel htmlFor="bio" fontSize="sm" letterSpacing="wide">
                 Bio
               </FormLabel>
@@ -89,11 +101,11 @@ const ChangeForm = function () {
                 id="bio"
                 placeholder="Enter your bio"
                 size="lg"
-                borderColor="gray.400"
-                {...register("bio")}
+                borderColor="gray.600"
+                {...register('bio')}
               />
             </FormControl>
-            <FormControl isRequired>
+            <FormControl>
               <FormLabel htmlFor="phone" fontSize="sm" letterSpacing="wide">
                 Phone
               </FormLabel>
@@ -102,11 +114,11 @@ const ChangeForm = function () {
                 type="tel"
                 placeholder="Enter your phone"
                 size="lg"
-                borderColor="gray.400"
-                {...register("phone")}
+                borderColor="gray.600"
+                {...register('phone')}
               />
             </FormControl>
-            <FormControl isRequired>
+            <FormControl>
               <FormLabel htmlFor="email" fontSize="sm" letterSpacing="wide">
                 Email
               </FormLabel>
@@ -115,11 +127,11 @@ const ChangeForm = function () {
                 type="email"
                 placeholder="Enter your email"
                 size="lg"
-                borderColor="gray.400"
-                {...register("email")}
+                borderColor="gray.600"
+                {...register('email')}
               />
             </FormControl>
-            <FormControl isRequired>
+            <FormControl>
               <FormLabel htmlFor="password" fontSize="sm" letterSpacing="wide">
                 Password
               </FormLabel>
@@ -128,8 +140,8 @@ const ChangeForm = function () {
                 type="password"
                 placeholder="Enter your password"
                 size="lg"
-                borderColor="gray.400"
-                {...register("password")}
+                borderColor="gray.600"
+                {...register('password')}
               />
             </FormControl>
           </VStack>

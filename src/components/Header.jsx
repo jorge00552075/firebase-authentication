@@ -1,21 +1,10 @@
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  Avatar,
-  Container,
-  Flex,
-  HStack,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
-  Text,
-} from "@chakra-ui/react";
-import { TriangleDownIcon } from "@chakra-ui/icons";
-
-import AuthContext from "../context/auth/auth-context";
-import { ReactComponent as Logo } from "../assets/devchallenges.svg";
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+// prettier-ignore
+import { Avatar, Container, Flex, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text } from "@chakra-ui/react";
+import { TriangleDownIcon } from '@chakra-ui/icons';
+import AuthContext from '../context/auth-context';
+import { ReactComponent as Logo } from '../assets/devchallenges.svg';
 
 const Header = function () {
   const authContext = useContext(AuthContext);
@@ -24,7 +13,7 @@ const Header = function () {
 
   const handleClick = function () {
     authContext.logout();
-    navigate("/signup", { replace: true });
+    navigate('/signup', { replace: true });
   };
 
   return (
@@ -38,7 +27,7 @@ const Header = function () {
       >
         <Logo />
         <HStack spacing={6}>
-          <Avatar size="sm" src="" name={user.name} />
+          <Avatar size="sm" src={user.photoURL} name={user.name} />
           <Text fontWeight="bold" fontSize="sm" lineHeight={5}>
             {user.name}
           </Text>

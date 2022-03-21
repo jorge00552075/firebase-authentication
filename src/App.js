@@ -1,20 +1,18 @@
-import { useContext } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import { Center, Spinner } from "@chakra-ui/react";
-import AuthContext from "./context/auth/auth-context.jsx";
-import SignUpPage from "./pages/SignUpPage.jsx";
-import LoginPage from "./pages/LoginPage.jsx";
-import AccountPage from "./pages/AccountPage.jsx";
-import AccountUpdatePage from "./pages/AccountUpdatePage.jsx";
-import NotFound from "./pages/NotFound.jsx";
+import { useContext } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Center, Spinner } from '@chakra-ui/react';
+import AuthContext from './context/auth-context.jsx';
+import AuthPage from './pages/AuthPage.jsx';
+import Profile from './pages/Profile.jsx';
+import ProfileUpdate from './pages/ProfileUpdate.jsx';
+import NotFound from './pages/NotFound.jsx';
 
 function App() {
   const authContext = useContext(AuthContext);
-
   const isAuthenticated = !!authContext.user;
   if (authContext.isLoading) {
     return (
-      <Center h="100vh">
+      <Center h="50vh">
         <Spinner thickness="4px" color="blue.500" size="xl" />
       </Center>
     );
@@ -22,11 +20,10 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      {isAuthenticated && <Route path="/account" element={<AccountPage />} />}
+      <Route path="/signup" element={<AuthPage />} />
+      {isAuthenticated && <Route path="/profile" element={<Profile />} />}
       {isAuthenticated && (
-        <Route path="/account/update" element={<AccountUpdatePage />} />
+        <Route path="/profile/update" element={<ProfileUpdate />} />
       )}
       <Route path="/" element={<Navigate to="/signup" />} />
       <Route path="*" element={<NotFound />} />
@@ -35,3 +32,12 @@ function App() {
 }
 
 export default App;
+// USER STORIES
+// I can register a new account
+// I can log in
+// I can sign out
+// I can log in or register with Google, Facebook, Twitter or Github
+// I can see my profile details
+
+// I can edit my details including: photo, name, bio, phone, email and password
+// I can upload a new photo or provide an image URL

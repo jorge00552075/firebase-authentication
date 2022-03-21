@@ -1,50 +1,38 @@
-import { useContext, useRef } from "react";
-import { Link as ReachLink } from "react-router-dom";
-import {
-  Button,
-  Flex,
-  FormControl,
-  FormLabel,
-  Heading,
-  Input,
-  Link,
-  Text,
-} from "@chakra-ui/react";
+import React, { useContext, useRef, useState } from 'react';
+// prettier-ignore
+import { Button, Flex, FormControl, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
+import FormWrapper from '../layout/FormWrapper.jsx';
+import AuthContext from '../../context/auth-context.jsx';
+import { Google, Facebook, Twitter, Github, Logo } from '../../assets/index';
 
-import FormWrapper from "../layout/FormWrapper.jsx";
-import AuthContext from "../../context/auth/auth-context.jsx";
-
-import { Google, Facebook, Twitter, Github, Logo } from "../../assets/index";
-
-//////////////////////////////
-const SignUpForm = function () {
-  // hooks
+const AuthForm = function () {
+  const [signup, setSignup] = useState(true);
   const authContext = useContext(AuthContext);
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  // event handlers
   const handleSubmit = async function (e) {
     e.preventDefault();
-
-    // validate inputs
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-
-    authContext.signUp(email, password);
+    if (signup) {
+      authContext.signUp(email, password);
+    } else {
+      authContext.login(email, password);
+    }
   };
 
   return (
     <FormWrapper>
       <Logo />
       <Heading as="h1" mt={6} fontWeight={600} fontSize="lg" lineHeight="7">
-        Join thousands of learners from around the world.
+        {signup ? 'Join thousands of learners from around the world.' : 'Login'}
       </Heading>
       <Text mt={2}>
-        Master web development by making real-life projects. There are multiple
-        paths for you to choose.
+        {signup &&
+          'Master web development by making real-life projects. There are multiple for you to choose.'}
       </Text>
-      <form onSubmit={handleSubmit} style={{ marginTop: "24px" }}>
+      <form onSubmit={handleSubmit} style={{ marginTop: '24px' }}>
         <FormControl isRequired>
           <FormLabel htmlFor="email" hidden>
             Email
@@ -73,7 +61,7 @@ const SignUpForm = function () {
           />
         </FormControl>
         <Button type="submit" w="full" mt={6} colorScheme="blue" size="lg">
-          Start coding now
+          {signup ? 'Start coding now' : 'Login'}
         </Button>
       </form>
       <Text
@@ -100,14 +88,18 @@ const SignUpForm = function () {
         letterSpacing="wide"
         lineHeight="5"
       >
-        Already a member?
-        <Link as={ReachLink} to="/login" color="blue.500">
-          {" "}
-          Login
-        </Link>
+        {signup ? 'Already a member ' : "Don't have an account yet "}
+        <Button
+          colorScheme="blue"
+          size="sm"
+          variant="link"
+          onClick={() => setSignup((val) => !val)}
+        >
+          {signup ? 'Login' : 'Register'}
+        </Button>
       </Text>
     </FormWrapper>
   );
 };
 
-export default SignUpForm;
+export default AuthForm;
