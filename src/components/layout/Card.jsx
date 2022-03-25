@@ -1,4 +1,4 @@
-import { StackDivider, VStack } from "@chakra-ui/react";
+import { StackDivider, VStack } from '@chakra-ui/react';
 
 const Card = function ({ children }) {
   return (

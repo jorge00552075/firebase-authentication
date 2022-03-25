@@ -113,7 +113,7 @@ const InfoTable = function () {
             PASSWORD
           </Text>
           <Text fontWeight="medium" fontSize="lg">
-            {user?.password?.replaceAll(/[a-z0-9]/g, '*') || ''}
+            {user.password}
           </Text>
         </Flex>
       </Card>

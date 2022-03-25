@@ -1,16 +1,16 @@
-import { useContext } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { Center, Spinner } from '@chakra-ui/react';
-import AuthContext from './context/auth-context.jsx';
-import AuthPage from './pages/AuthPage.jsx';
-import Profile from './pages/Profile.jsx';
-import ProfileUpdate from './pages/ProfileUpdate.jsx';
-import NotFound from './pages/NotFound.jsx';
+import { useContext } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Center, Spinner } from "@chakra-ui/react";
+import AuthContext from "./context/auth-context.jsx";
+import AuthPage from "./pages/AuthPage.jsx";
+import Profile from "./pages/Profile.jsx";
+import ProfileUpdate from "./pages/ProfileUpdate.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 function App() {
   const authContext = useContext(AuthContext);
   const isAuthenticated = !!authContext.user;
-  if (authContext.isLoading) {
+  if (authContext.loading) {
     return (
       <Center h="50vh">
         <Spinner thickness="4px" color="blue.500" size="xl" />
@@ -38,6 +38,8 @@ export default App;
 // I can sign out
 // I can log in or register with Google, Facebook, Twitter or Github
 // I can see my profile details
-
 // I can edit my details including: photo, name, bio, phone, email and password
 // I can upload a new photo or provide an image URL
+
+// PROBLEMS
+// need loading spinner on image upload
