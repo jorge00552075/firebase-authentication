@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 // prettier-ignore
-import { onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { doc, getDoc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebaseConfig";
 
@@ -13,6 +13,7 @@ const AuthContext = createContext({
   login: (email, password) => {},
   logout: () => {},
   updateUser: (data) => {},
+  signInWithGoogle: () => {},
 });
 
 export const AuthProvider = function ({ children }) {
@@ -24,6 +25,7 @@ export const AuthProvider = function ({ children }) {
   // Subscribe to auth changes
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
+      console.log(user);
       setUser(user);
       setLoading(false);
     });
@@ -52,10 +54,15 @@ export const AuthProvider = function ({ children }) {
         email,
         password
       );
+
       const userData = {
-        uid: user.uid,
+        photoURL: user.photoURL,
+        displayName: user.displayName,
+        bio: "I'm a bio waiting to be written.",
         email: user.email,
-        password: "Super Secret Password",
+        phoneNumber: user.phoneNumber,
+        password: "Secret Password",
+        uid: user.uid,
       };
 
       await setDoc(doc(db, "users", user.uid), userData);
@@ -119,6 +126,20 @@ export const AuthProvider = function ({ children }) {
     navigate("/profile", { replace: true });
   };
 
+  // SIGN IN WITH GOOGLE
+  const signInWithGoogle = async function () {
+    try {
+      const provider = new GoogleAuthProvider();
+      provider.addScope("profile");
+      provider.addScope("email");
+      const { user } = await signInWithPopup(auth, provider);
+
+      // add new user to database
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const value = {
     user: user,
     loading: loading,
@@ -126,6 +147,7 @@ export const AuthProvider = function ({ children }) {
     login: handleLogin,
     logout: handleLogout,
     updateUser: updateUser,
+    signInWithGoogle,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

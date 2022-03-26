@@ -10,15 +10,15 @@ import Card from "../layout/Card.jsx";
 const ChangeForm = function () {
   const { user, updateUser } = useContext(AuthContext);
 
-  const { register, handleSubmit } = useForm({
-    defaultValues: {
-      name: user.name,
-      bio: user.bio,
-      phone: user.phone,
-      email: user.email,
-      password: user.password,
-    },
-  });
+  const defaultValues = {
+    name: user.name,
+    bio: user.bio,
+    phone: user.phone,
+    email: user.email,
+    password: user.password,
+  };
+
+  const { register, handleSubmit } = useForm({ defaultValues });
 
   const onSubmit = function (data) {
     updateUser(data);

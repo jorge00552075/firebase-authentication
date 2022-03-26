@@ -1,15 +1,19 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from "react";
 // prettier-ignore
 import { Button, Flex, FormControl, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
-import FormWrapper from '../layout/FormWrapper.jsx';
-import AuthContext from '../../context/auth-context.jsx';
-import { Google, Facebook, Twitter, Github, Logo } from '../../assets/index';
+import FormWrapper from "../layout/FormWrapper.jsx";
+import AuthContext from "../../context/auth-context.jsx";
+import { Google, Facebook, Twitter, Github, Logo } from "../../assets/index";
 
 const AuthForm = function () {
   const [signup, setSignup] = useState(true);
   const authContext = useContext(AuthContext);
   const emailRef = useRef();
   const passwordRef = useRef();
+
+  const handleClick = async function () {
+    await authContext.signInWithGoogle();
+  };
 
   const handleSubmit = async function (e) {
     e.preventDefault();
@@ -26,13 +30,13 @@ const AuthForm = function () {
     <FormWrapper>
       <Logo />
       <Heading as="h1" mt={6} fontWeight={600} fontSize="lg" lineHeight="7">
-        {signup ? 'Join thousands of learners from around the world.' : 'Login'}
+        {signup ? "Join thousands of learners from around the world." : "Login"}
       </Heading>
       <Text mt={2}>
         {signup &&
-          'Master web development by making real-life projects. There are multiple for you to choose.'}
+          "Master web development by making real-life projects. There are multiple for you to choose."}
       </Text>
-      <form onSubmit={handleSubmit} style={{ marginTop: '24px' }}>
+      <form onSubmit={handleSubmit} style={{ marginTop: "24px" }}>
         <FormControl isRequired>
           <FormLabel htmlFor="email" hidden>
             Email
@@ -61,7 +65,7 @@ const AuthForm = function () {
           />
         </FormControl>
         <Button type="submit" w="full" mt={6} colorScheme="blue" size="lg">
-          {signup ? 'Start coding now' : 'Login'}
+          {signup ? "Start coding now" : "Login"}
         </Button>
       </form>
       <Text
@@ -70,12 +74,13 @@ const AuthForm = function () {
         textColor="gray.600"
         textAlign="center"
         letterSpacing="wide"
-        lineHeight="5"
-      >
+        lineHeight="5">
         or continue with these social profile.
       </Text>
       <Flex justifyContent="center" gap={6} mt={4}>
-        <Google />
+        <Button onClick={handleClick}>
+          <Google />
+        </Button>
         <Facebook />
         <Twitter />
         <Github />
@@ -86,16 +91,14 @@ const AuthForm = function () {
         textColor="gray.600"
         textAlign="center"
         letterSpacing="wide"
-        lineHeight="5"
-      >
-        {signup ? 'Already a member ' : "Don't have an account yet "}
+        lineHeight="5">
+        {signup ? "Already a member " : "Don't have an account yet "}
         <Button
           colorScheme="blue"
           size="sm"
           variant="link"
-          onClick={() => setSignup((val) => !val)}
-        >
-          {signup ? 'Login' : 'Register'}
+          onClick={() => setSignup((val) => !val)}>
+          {signup ? "Login" : "Register"}
         </Button>
       </Text>
     </FormWrapper>

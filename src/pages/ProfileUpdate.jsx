@@ -9,6 +9,7 @@ const ProfileUpdate = function () {
   const { user } = useContext(AuthContext);
 
   if (user.providerId === "firebase") {
+    console.log("providerId: ", user.providerId);
     // originally set to the value "user" from onAuthStateChanged
     // but re-assigned to data from database
     return (
