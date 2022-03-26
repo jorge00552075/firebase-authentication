@@ -25,7 +25,7 @@ export const AuthProvider = function ({ children }) {
   // Subscribe to auth changes
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
-      console.log(user);
+      if (user) console.log("✅ Authenticated!");
       setUser(user);
       setLoading(false);
     });
@@ -55,6 +55,7 @@ export const AuthProvider = function ({ children }) {
         password
       );
 
+      // REFACTOR !!!
       const userData = {
         photoURL: user.photoURL,
         displayName: user.displayName,
@@ -63,16 +64,18 @@ export const AuthProvider = function ({ children }) {
         phoneNumber: user.phoneNumber,
         password: "Secret Password",
         uid: user.uid,
+        firestore: true,
       };
-
+      // create document
       await setDoc(doc(db, "users", user.uid), userData);
 
+      // success
       if (user) {
         setUser(userData);
         navigate("/profile", { replace: true });
         setLoading(false);
       }
-
+      // fail
       if (!user) {
         throw Error("Oops something went wrong creating your account.");
       }
@@ -93,13 +96,13 @@ export const AuthProvider = function ({ children }) {
 
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
-
+      // success
       if (docSnap.exists()) {
         setUser(docSnap.data());
         navigate("/profile", { replace: true });
         setLoading(false);
       }
-
+      // fail
       if (!docSnap.exists()) {
         throw Error("Oops looks like your profile doesn't exist.");
       }
@@ -134,7 +137,29 @@ export const AuthProvider = function ({ children }) {
       provider.addScope("email");
       const { user } = await signInWithPopup(auth, provider);
 
-      // add new user to database
+      ///////////////////////////////
+      const userData = {
+        photoURL: user.photoURL,
+        displayName: user.displayName,
+        bio: "I'm a bio waiting to be written.",
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        password: "Secret Password",
+        uid: user.uid,
+        firestore: true,
+      };
+
+      await setDoc(doc(db, "users", user.uid), userData);
+
+      if (user) {
+        setUser(userData);
+        navigate("/profile", { replace: true });
+        setLoading(false);
+      }
+
+      if (!user) {
+        throw Error("Oops something went wrong creating your account.");
+      }
     } catch (err) {
       console.error(err);
     }

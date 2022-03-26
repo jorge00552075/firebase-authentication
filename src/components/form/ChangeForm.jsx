@@ -11,9 +11,10 @@ const ChangeForm = function () {
   const { user, updateUser } = useContext(AuthContext);
 
   const defaultValues = {
-    name: user.name,
+    photoURL: user.photoURL,
+    displayName: user.displayName,
     bio: user.bio,
-    phone: user.phone,
+    phoneNumber: user.phoneNumber,
     email: user.email,
     password: user.password,
   };
@@ -27,7 +28,10 @@ const ChangeForm = function () {
   const handleChange = async function (e) {
     const file = e.target.files[0];
     const firebaseStorage = getStorage();
-    const storageReference = ref(firebaseStorage, `avatars/${file.name}`);
+    const storageReference = ref(
+      firebaseStorage,
+      `avatars/${user.uid}${Date.now()}`
+    );
     await uploadBytes(storageReference, file);
     const downloadURL = await getDownloadURL(storageReference);
 
@@ -58,7 +62,7 @@ const ChangeForm = function () {
             <Avatar
               width={"72px"}
               height={"72px"}
-              name={user.name}
+              name={user.displayName}
               src={user.photoURL}
               borderRadius={8}
             />
@@ -70,9 +74,8 @@ const ChangeForm = function () {
                 fontSize="sm"
                 color="gray.600"
                 letterSpacing="wide"
-                textTransform="uppercase"
                 cursor="pointer">
-                change photo
+                Upload a new photo
               </FormLabel>
               <Input
                 type="file"
@@ -80,6 +83,12 @@ const ChangeForm = function () {
                 name="file"
                 onChange={handleChange}
                 display="none"
+              />
+              {/* IMAGE URL */}
+              <Input
+                type="text"
+                placeholder="Or provide an image URL"
+                {...register("photoURL")}
               />
             </FormControl>
             <FormControl>
@@ -130,6 +139,7 @@ const ChangeForm = function () {
                 placeholder="Enter your email"
                 size="lg"
                 borderColor="gray.600"
+                disabled
                 {...register("email")}
               />
             </FormControl>
@@ -143,6 +153,7 @@ const ChangeForm = function () {
                 placeholder="Enter your password"
                 size="lg"
                 borderColor="gray.600"
+                disabled
                 {...register("password")}
               />
             </FormControl>
