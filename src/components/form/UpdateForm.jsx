@@ -1,13 +1,25 @@
 import { useContext } from "react";
 import { Link as ReachLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
-// prettier-ignore
-import { Avatar, Box, Button, Container, FormControl, FormLabel, Heading, Input,Link, Text, Textarea,VStack } from '@chakra-ui/react';
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Link,
+  Text,
+  Textarea,
+  VStack,
+} from "@chakra-ui/react";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import AuthContext from "../../context/auth-context.jsx";
 import Card from "../layout/Card.jsx";
 
-const ChangeForm = function () {
+const UpdateForm = function () {
   const { user, updateUser } = useContext(AuthContext);
 
   const defaultValues = {
@@ -40,7 +52,7 @@ const ChangeForm = function () {
 
   return (
     <Container maxW="container.lg" mt={4}>
-      <Link as={ReachLink} to={"/profile"}>
+      <Link as={ReachLink} to={"/account"}>
         &larr; Back
       </Link>
       <Card>
@@ -92,16 +104,19 @@ const ChangeForm = function () {
               />
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="name" fontSize="sm" letterSpacing="wide">
+              <FormLabel
+                htmlFor="displayName"
+                fontSize="sm"
+                letterSpacing="wide">
                 Name
               </FormLabel>
               <Input
-                id="name"
+                id="displayName"
                 type="text"
                 placeholder="Enter your name"
                 size="lg"
                 borderColor="gray.600"
-                {...register("name")}
+                {...register("displayName")}
               />
             </FormControl>
             <FormControl>
@@ -117,16 +132,19 @@ const ChangeForm = function () {
               />
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="phone" fontSize="sm" letterSpacing="wide">
+              <FormLabel
+                htmlFor="phoneNumber"
+                fontSize="sm"
+                letterSpacing="wide">
                 Phone
               </FormLabel>
               <Input
-                id="phone"
+                id="phoneNumber"
                 type="tel"
                 placeholder="Enter your phone"
                 size="lg"
                 borderColor="gray.600"
-                {...register("phone")}
+                {...register("phoneNumber")}
               />
             </FormControl>
             <FormControl>
@@ -167,4 +185,4 @@ const ChangeForm = function () {
   );
 };
 
-export default ChangeForm;
+export default UpdateForm;

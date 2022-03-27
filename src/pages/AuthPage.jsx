@@ -1,7 +1,11 @@
-import AuthForm from '../components/form/AuthForm.jsx';
+import AuthForm from "../components/form/AuthForm.jsx";
 
 const AuthPage = function () {
-  return <AuthForm />;
+  return (
+    <main>
+      <AuthForm />
+    </main>
+  );
 };
 
 export default AuthPage;

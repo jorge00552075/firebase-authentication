@@ -1,7 +1,14 @@
 import React, { useContext, useRef, useState } from "react";
-// prettier-ignore
-import { Button, Flex, FormControl, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
-import FormWrapper from "../layout/FormWrapper.jsx";
+import {
+  Button,
+  Container,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import AuthContext from "../../context/auth-context.jsx";
 import { Google, Facebook, Twitter, Github, Logo } from "../../assets/index";
 
@@ -11,12 +18,15 @@ const AuthForm = function () {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const handleClick = async function () {
+  const handleSignInWithGoogle = async function () {
     await authContext.signInWithGoogle();
   };
 
+  const handleClick = () => setSignup((v) => !v);
+
   const handleSubmit = async function (e) {
     e.preventDefault();
+
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     if (signup) {
@@ -27,7 +37,12 @@ const AuthForm = function () {
   };
 
   return (
-    <FormWrapper>
+    <Container
+      mt={32}
+      p={14}
+      border="1px"
+      borderColor="gray.400"
+      borderRadius="lg">
       <Logo />
       <Heading as="h1" mt={6} fontWeight={600} fontSize="lg" lineHeight="7">
         {signup ? "Join thousands of learners from around the world." : "Login"}
@@ -78,7 +93,7 @@ const AuthForm = function () {
         or continue with these social profile.
       </Text>
       <Flex justifyContent="center" gap={6} mt={4}>
-        <Button onClick={handleClick}>
+        <Button onClick={handleSignInWithGoogle}>
           <Google />
         </Button>
         <Facebook />
@@ -97,11 +112,11 @@ const AuthForm = function () {
           colorScheme="blue"
           size="sm"
           variant="link"
-          onClick={() => setSignup((val) => !val)}>
+          onClick={handleClick}>
           {signup ? "Login" : "Register"}
         </Button>
       </Text>
-    </FormWrapper>
+    </Container>
   );
 };
 

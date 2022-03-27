@@ -72,7 +72,7 @@ export const AuthProvider = function ({ children }) {
       // success
       if (user) {
         setUser(userData);
-        navigate("/profile", { replace: true });
+        navigate("/account", { replace: true });
         setLoading(false);
       }
       // fail
@@ -99,7 +99,7 @@ export const AuthProvider = function ({ children }) {
       // success
       if (docSnap.exists()) {
         setUser(docSnap.data());
-        navigate("/profile", { replace: true });
+        navigate("/account", { replace: true });
         setLoading(false);
       }
       // fail
@@ -126,7 +126,7 @@ export const AuthProvider = function ({ children }) {
     await updateDoc(docRef, data);
 
     toast({ status: "success", title: "Profile Updated" });
-    navigate("/profile", { replace: true });
+    navigate("/account", { replace: true });
   };
 
   // SIGN IN WITH GOOGLE
@@ -153,7 +153,7 @@ export const AuthProvider = function ({ children }) {
 
       if (user) {
         setUser(userData);
-        navigate("/profile", { replace: true });
+        navigate("/account", { replace: true });
         setLoading(false);
       }
 

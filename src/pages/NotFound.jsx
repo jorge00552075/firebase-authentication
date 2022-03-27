@@ -8,15 +8,14 @@ const NotFound = function () {
       h="100vh"
       bgColor="blue.500"
       textColor="white"
-      gap={1}
-    >
+      gap={1}>
       <Heading as="h1" fontSize="128px" lineHeight="1">
         404
       </Heading>
       <Text fontSize="xl" fontWeight="medium">
         We couldn't find that page!
       </Text>
-      <Link as={ReachLink} to="/signup" fontSize="xl" fontWeight="medium">
+      <Link as={ReachLink} to="/auth" fontSize="xl" fontWeight="medium">
         &larr; Home
       </Link>
     </Center>
