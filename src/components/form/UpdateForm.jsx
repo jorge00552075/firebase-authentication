@@ -20,21 +20,21 @@ import AuthContext from "../../context/auth-context.jsx";
 import Card from "../layout/Card.jsx";
 
 const UpdateForm = function () {
-  const { user, updateUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
 
   const defaultValues = {
-    photoURL: user.photoURL,
-    displayName: user.displayName,
-    bio: user.bio,
-    phoneNumber: user.phoneNumber,
-    email: user.email,
-    password: user.password,
+    photoURL: currentUser.photoURL,
+    displayName: currentUser.displayName,
+    bio: currentUser.bio,
+    phoneNumber: currentUser.phoneNumber,
+    email: currentUser.email,
+    password: currentUser.password,
   };
 
   const { register, handleSubmit } = useForm({ defaultValues });
 
   const onSubmit = function (data) {
-    updateUser(data);
+    // updateUser(data);
   };
 
   const handleChange = async function (e) {
@@ -42,12 +42,12 @@ const UpdateForm = function () {
     const firebaseStorage = getStorage();
     const storageReference = ref(
       firebaseStorage,
-      `avatars/${user.uid}${Date.now()}`
+      `avatars/${currentUser.uid}${Date.now()}`
     );
     await uploadBytes(storageReference, file);
     const downloadURL = await getDownloadURL(storageReference);
 
-    updateUser({ ...user, photoURL: downloadURL });
+    // updateUser({ ...user, photoURL: downloadURL });
   };
 
   return (
@@ -74,8 +74,8 @@ const UpdateForm = function () {
             <Avatar
               width={"72px"}
               height={"72px"}
-              name={user.displayName}
-              src={user.photoURL}
+              name={currentUser.displayName}
+              src={currentUser.photoURL}
               borderRadius={8}
             />
             <FormControl>

@@ -16,7 +16,7 @@ import {
 import AuthContext from "../context/auth-context.jsx";
 
 const UserAccountInfo = function () {
-  const { user } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
 
   const StyledTableData = function ({ children }) {
     return (
@@ -74,8 +74,8 @@ const UserAccountInfo = function () {
               <Td>
                 <Avatar
                   size="lg"
-                  name={user.name}
-                  src={user.photoURL}
+                  name={currentUser.name}
+                  src={currentUser.photoURL}
                   borderRadius={8}
                 />
               </Td>
@@ -83,31 +83,31 @@ const UserAccountInfo = function () {
             <Tr>
               <StyledTableData>Name</StyledTableData>
               <Td fontWeight="medium" fontSize="lg">
-                {user.displayName}
+                {currentUser.displayName}
               </Td>
             </Tr>
             <Tr>
               <StyledTableData>Bio</StyledTableData>
               <Td fontWeight="medium" fontSize="lg">
-                {user.bio}
+                {currentUser.bio}
               </Td>
             </Tr>
             <Tr>
               <StyledTableData>Phone</StyledTableData>
               <Td fontWeight="medium" fontSize="lg">
-                {user.phoneNumber}
+                {currentUser.phoneNumber}
               </Td>
             </Tr>
             <Tr>
               <StyledTableData>Email</StyledTableData>
               <Td fontWeight="medium" fontSize="lg">
-                {user.email}
+                {currentUser.email}
               </Td>
             </Tr>
             <Tr>
               <StyledTableData>Password</StyledTableData>
               <Td fontWeight="medium" fontSize="lg">
-                {user.password}
+                {currentUser.password}
               </Td>
             </Tr>
           </Tbody>

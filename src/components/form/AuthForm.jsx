@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Button,
   Container,
@@ -9,18 +9,19 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
-import AuthContext from "../../context/auth-context.jsx";
 import { Google, Facebook, Twitter, Github, Logo } from "../../assets/index";
+import {
+  createUser,
+  signInUser,
+  signInWithGoogle,
+} from "../../firebaseConfig.js";
 
 const AuthForm = function () {
   const [signup, setSignup] = useState(true);
-  const authContext = useContext(AuthContext);
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const handleSignInWithGoogle = async function () {
-    await authContext.signInWithGoogle();
-  };
+  const handleGoogleAuth = async () => await signInWithGoogle();
 
   const handleClick = () => setSignup((v) => !v);
 
@@ -29,10 +30,29 @@ const AuthForm = function () {
 
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    if (signup) {
-      authContext.signUp(email, password);
-    } else {
-      authContext.login(email, password);
+    // validate inputs
+
+    try {
+      if (signup) {
+        await createUser(email, password);
+      } else {
+        await signInUser(email, password);
+      }
+    } catch (err) {
+      switch (err.code) {
+        case "auth/email-already-in-use":
+          console.error("💥 auth/email-already-in-use");
+          break;
+        case "auth/user-not-found":
+          console.error("💥 auth/user-not-found");
+          break;
+        case "auth/wrong-password":
+          console.error("💥 auth/wrong-password");
+          break;
+        default:
+          console.error("💥💥💥 ERROR", err.message);
+          break;
+      }
     }
   };
 
@@ -93,7 +113,7 @@ const AuthForm = function () {
         or continue with these social profile.
       </Text>
       <Flex justifyContent="center" gap={6} mt={4}>
-        <Button onClick={handleSignInWithGoogle}>
+        <Button onClick={handleGoogleAuth}>
           <Google />
         </Button>
         <Facebook />

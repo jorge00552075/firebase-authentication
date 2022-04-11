@@ -5,13 +5,14 @@ import { Avatar, Container, Flex, HStack, Menu, MenuButton, MenuDivider, MenuIte
 import { TriangleDownIcon } from "@chakra-ui/icons";
 import AuthContext from "../context/auth-context";
 import { ReactComponent as Logo } from "../assets/devchallenges.svg";
+import { signOutUser } from "../firebaseConfig";
 
 const Header = function () {
-  const { user, logout } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleClick = function () {
-    logout();
+    signOutUser();
     navigate("/auth", { replace: true });
   };
 
@@ -25,9 +26,13 @@ const Header = function () {
         px={3}>
         <Logo />
         <HStack spacing={6}>
-          <Avatar size="sm" src={user.photoURL} name={user.name} />
+          <Avatar
+            size="sm"
+            src={currentUser.photoURL}
+            name={currentUser.name}
+          />
           <Text fontWeight="bold" fontSize="sm" lineHeight={5}>
-            {user.name}
+            {currentUser.name}
           </Text>
           <Menu>
             <MenuButton>
