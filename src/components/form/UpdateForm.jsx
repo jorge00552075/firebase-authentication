@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link as ReachLink } from "react-router-dom";
+import { Link as ReachLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
   Avatar,
@@ -14,40 +14,44 @@ import {
   Text,
   Textarea,
   VStack,
+  useToast,
+  Flex,
 } from "@chakra-ui/react";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import AuthContext from "../../context/auth-context.jsx";
 import Card from "../layout/Card.jsx";
+import { updateUser, uploadPhoto } from "../../firebaseConfig";
 
 const UpdateForm = function () {
-  const { currentUser } = useContext(AuthContext);
+  const { documentData } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const defaultValues = {
-    photoURL: currentUser.photoURL,
-    displayName: currentUser.displayName,
-    bio: currentUser.bio,
-    phoneNumber: currentUser.phoneNumber,
-    email: currentUser.email,
-    password: currentUser.password,
+    photoURL: documentData.photoURL,
+    displayName: documentData.displayName,
+    bio: documentData.bio,
+    phoneNumber: documentData.phoneNumber,
+    email: documentData.email,
+    password: documentData.password,
   };
 
   const { register, handleSubmit } = useForm({ defaultValues });
 
-  const onSubmit = function (data) {
-    // updateUser(data);
+  const onSubmit = async (data) => {
+    await updateUser(documentData.uid, data);
+    // ** add transition animation **
+    navigate("/account", { replace: true });
+    toast({
+      status: "success",
+      title: "Successfully updated account.",
+      position: "top-right",
+    });
   };
 
-  const handleChange = async function (e) {
-    const file = e.target.files[0];
-    const firebaseStorage = getStorage();
-    const storageReference = ref(
-      firebaseStorage,
-      `avatars/${currentUser.uid}${Date.now()}`
-    );
-    await uploadBytes(storageReference, file);
-    const downloadURL = await getDownloadURL(storageReference);
-
-    // updateUser({ ...user, photoURL: downloadURL });
+  const handleChange = async (event) => {
+    const file = event.target.files[0];
+    await uploadPhoto(documentData.uid, file);
+    // ADD LOADING SPINNER !!!
   };
 
   return (
@@ -71,38 +75,35 @@ const UpdateForm = function () {
         </Box>
         <form onSubmit={handleSubmit(onSubmit)}>
           <VStack spacing={4} w={416} alignItems="flex-start">
-            <Avatar
-              width={"72px"}
-              height={"72px"}
-              name={currentUser.displayName}
-              src={currentUser.photoURL}
-              borderRadius={8}
-            />
-            <FormControl>
-              <FormLabel
-                htmlFor="file"
-                margin={0}
-                fontWeight="medium"
-                fontSize="sm"
-                color="gray.600"
-                letterSpacing="wide"
-                cursor="pointer">
-                Upload a new photo
-              </FormLabel>
-              <Input
-                type="file"
-                id="file"
-                name="file"
-                onChange={handleChange}
-                display="none"
+            <Flex alignItems="center" gap={6}>
+              <Avatar
+                width={"72px"}
+                height={"72px"}
+                name={documentData.displayName}
+                src={documentData.photoURL}
+                borderRadius={8}
               />
-              {/* IMAGE URL */}
-              <Input
-                type="text"
-                placeholder="Or provide an image URL"
-                {...register("photoURL")}
-              />
-            </FormControl>
+              <FormControl>
+                <FormLabel
+                  htmlFor="file"
+                  margin={0}
+                  fontWeight="medium"
+                  fontSize="sm"
+                  color="gray.600"
+                  letterSpacing="wide"
+                  cursor="pointer"
+                  _hover={{ textDecoration: "underline" }}>
+                  CHOOSE IMAGE
+                </FormLabel>
+                <Input
+                  type="file"
+                  id="file"
+                  name="file"
+                  onChange={handleChange}
+                  display="none"
+                />
+              </FormControl>
+            </Flex>
             <FormControl>
               <FormLabel
                 htmlFor="displayName"

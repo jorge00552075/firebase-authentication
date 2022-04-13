@@ -1,19 +1,36 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-// prettier-ignore
-import { Avatar, Container, Flex, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Container,
+  Flex,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import { TriangleDownIcon } from "@chakra-ui/icons";
 import AuthContext from "../context/auth-context";
 import { ReactComponent as Logo } from "../assets/devchallenges.svg";
 import { signOutUser } from "../firebaseConfig";
 
 const Header = function () {
-  const { currentUser } = useContext(AuthContext);
+  const { documentData } = useContext(AuthContext);
   const navigate = useNavigate();
+  const toast = useToast();
 
-  const handleClick = function () {
-    signOutUser();
+  const handleClick = async () => {
+    await signOutUser();
     navigate("/auth", { replace: true });
+    toast({
+      status: "success",
+      title: "You have successfully signed out.",
+      position: "top-right",
+    });
   };
 
   return (
@@ -27,12 +44,13 @@ const Header = function () {
         <Logo />
         <HStack spacing={6}>
           <Avatar
+            borderRadius={8}
             size="sm"
-            src={currentUser.photoURL}
-            name={currentUser.name}
+            src={documentData.photoURL}
+            name={documentData.displayName}
           />
           <Text fontWeight="bold" fontSize="sm" lineHeight={5}>
-            {currentUser.name}
+            {documentData.displayName}
           </Text>
           <Menu>
             <MenuButton>

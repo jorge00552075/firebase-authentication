@@ -16,7 +16,7 @@ import {
 import AuthContext from "../context/auth-context.jsx";
 
 const UserAccountInfo = function () {
-  const { currentUser } = useContext(AuthContext);
+  const { documentData } = useContext(AuthContext);
 
   const StyledTableData = function ({ children }) {
     return (
@@ -43,7 +43,7 @@ const UserAccountInfo = function () {
         marginTop={12}
         border="1px"
         borderColor="gray.200"
-        borderRadius="lg">
+        borderRadius="xl">
         <Flex
           alignItems="center"
           justifyContent="space-between"
@@ -57,11 +57,7 @@ const UserAccountInfo = function () {
             </Text>
           </div>
 
-          <Link
-            as={ReachLink}
-            to="/account/update"
-            fontWeight="medium"
-            color="blue.500">
+          <Link as={ReachLink} to="/account/update" fontWeight="medium">
             Edit
           </Link>
         </Flex>
@@ -74,8 +70,8 @@ const UserAccountInfo = function () {
               <Td>
                 <Avatar
                   size="lg"
-                  name={currentUser.name}
-                  src={currentUser.photoURL}
+                  name={documentData.displayName}
+                  src={documentData.photoURL}
                   borderRadius={8}
                 />
               </Td>
@@ -83,31 +79,31 @@ const UserAccountInfo = function () {
             <Tr>
               <StyledTableData>Name</StyledTableData>
               <Td fontWeight="medium" fontSize="lg">
-                {currentUser.displayName}
+                {documentData.displayName}
               </Td>
             </Tr>
             <Tr>
               <StyledTableData>Bio</StyledTableData>
               <Td fontWeight="medium" fontSize="lg">
-                {currentUser.bio}
+                {documentData.bio}
               </Td>
             </Tr>
             <Tr>
               <StyledTableData>Phone</StyledTableData>
               <Td fontWeight="medium" fontSize="lg">
-                {currentUser.phoneNumber}
+                {documentData.phoneNumber}
               </Td>
             </Tr>
             <Tr>
               <StyledTableData>Email</StyledTableData>
               <Td fontWeight="medium" fontSize="lg">
-                {currentUser.email}
+                {documentData.email}
               </Td>
             </Tr>
             <Tr>
               <StyledTableData>Password</StyledTableData>
               <Td fontWeight="medium" fontSize="lg">
-                {currentUser.password}
+                {documentData.password}
               </Td>
             </Tr>
           </Tbody>

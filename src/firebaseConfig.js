@@ -14,7 +14,14 @@ import {
   getDoc,
   setDoc,
   updateDoc,
+  onSnapshot,
 } from "firebase/firestore";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from "@firebase/storage";
 
 const firebaseApp = initializeApp({
   apiKey: "AIzaSyAMyWk3dAAMpNGm9OXgyttXgoAdxQRGVYc",
@@ -30,7 +37,6 @@ const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: "select_account" });
 export const db = getFirestore();
 
-//////////////////////////////
 export const createUser = (email, password) =>
   createUserWithEmailAndPassword(auth, email, password);
 
@@ -39,9 +45,9 @@ export const signInUser = (email, password) =>
 
 export const signInWithGoogle = () => signInWithPopup(auth, provider);
 
-export const updateUser = async (uid, data) => {
+export const updateUser = (uid, data) => {
   const documentReference = doc(db, "users", uid);
-  await updateDoc(documentReference, data);
+  return updateDoc(documentReference, data);
 };
 
 export const signOutUser = () => signOut(auth);
@@ -61,11 +67,26 @@ export const createUserDoc = async (user) => {
         phoneNumber: user.phoneNumber,
         photoURL: user.photoURL,
         uid: user.uid,
-        bio: "i am a bio waiting to be filled out!",
-        password: "i am a secret!",
+        bio: "",
+        password: "************",
       });
     }
   } catch (err) {
     console.error("💥 ERROR", err.message);
   }
+};
+
+export const snapshotListener = (uid, callback) => {
+  const documentReference = doc(db, "users", uid);
+  return onSnapshot(documentReference, callback);
+};
+
+const firebaseStorage = getStorage();
+export const uploadPhoto = async (uid, file) => {
+  const storageReference = ref(firebaseStorage, `avatars/${uid}${Date.now()}`);
+  await uploadBytes(storageReference, file);
+  const downloadURL = await getDownloadURL(storageReference);
+  await updateUser(uid, { photoURL: downloadURL });
+
+  console.log("UPLOAD FINISHED");
 };

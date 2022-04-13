@@ -23,3 +23,5 @@ function App() {
 }
 
 export default App;
+// add loading spinner
+// add animations

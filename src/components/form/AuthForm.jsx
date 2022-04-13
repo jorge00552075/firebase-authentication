@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import {
   Button,
   Container,
@@ -8,7 +9,12 @@ import {
   Heading,
   Input,
   Text,
+  useToast,
+  IconButton,
+  InputLeftElement,
+  InputGroup,
 } from "@chakra-ui/react";
+import { EmailIcon, LockIcon } from "@chakra-ui/icons";
 import { Google, Facebook, Twitter, Github, Logo } from "../../assets/index";
 import {
   createUser,
@@ -20,8 +26,15 @@ const AuthForm = function () {
   const [signup, setSignup] = useState(true);
   const emailRef = useRef();
   const passwordRef = useRef();
+  const navigate = useNavigate();
+  const toast = useToast();
 
-  const handleGoogleAuth = async () => await signInWithGoogle();
+  const handleGoogleAuth = async () => {
+    const user = await signInWithGoogle();
+    if (user) {
+      navigate("/account", { replace: true });
+    }
+  };
 
   const handleClick = () => setSignup((v) => !v);
 
@@ -33,36 +46,38 @@ const AuthForm = function () {
     // validate inputs
 
     try {
+      // REFACTOR !!!
       if (signup) {
-        await createUser(email, password);
+        const user = await createUser(email, password);
+
+        if (user) {
+          navigate("/account", { replace: true });
+        }
       } else {
-        await signInUser(email, password);
+        const user = await signInUser(email, password);
+
+        if (user) {
+          navigate("/account", { replace: true });
+        }
       }
     } catch (err) {
-      switch (err.code) {
-        case "auth/email-already-in-use":
-          console.error("💥 auth/email-already-in-use");
-          break;
-        case "auth/user-not-found":
-          console.error("💥 auth/user-not-found");
-          break;
-        case "auth/wrong-password":
-          console.error("💥 auth/wrong-password");
-          break;
-        default:
-          console.error("💥💥💥 ERROR", err.message);
-          break;
-      }
+      toast({
+        title: "Error",
+        description: err.code,
+        status: "error",
+        position: "top-right",
+      });
     }
   };
 
   return (
     <Container
+      width={473}
       mt={32}
       p={14}
       border="1px"
       borderColor="gray.400"
-      borderRadius="lg">
+      borderRadius="3xl">
       <Logo />
       <Heading as="h1" mt={6} fontWeight={600} fontSize="lg" lineHeight="7">
         {signup ? "Join thousands of learners from around the world." : "Login"}
@@ -76,28 +91,40 @@ const AuthForm = function () {
           <FormLabel htmlFor="email" hidden>
             Email
           </FormLabel>
-          <Input
-            type="email"
-            id="email"
-            size="lg"
-            placeholder="email"
-            ref={emailRef}
-            borderColor="gray.400"
-          />
+          <InputGroup>
+            <InputLeftElement
+              pointerEvents="none"
+              children={<EmailIcon color="gray.500" fontSize={20} mt={2} />}
+            />
+            <Input
+              type="email"
+              id="email"
+              size="lg"
+              placeholder="email"
+              ref={emailRef}
+              borderColor="gray.400"
+            />
+          </InputGroup>
         </FormControl>
         <FormControl isRequired mt={4}>
           <FormLabel htmlFor="password" hidden>
             Password
           </FormLabel>
-          <Input
-            type="password"
-            id="password"
-            minLength="6"
-            size="lg"
-            placeholder="password"
-            ref={passwordRef}
-            borderColor="gray.400"
-          />
+          <InputGroup>
+            <InputLeftElement
+              pointerEvents="none"
+              children={<LockIcon color="gray.500" fontSize={20} mt={2} />}
+            />
+            <Input
+              type="password"
+              id="password"
+              minLength="6"
+              size="lg"
+              placeholder="password"
+              ref={passwordRef}
+              borderColor="gray.400"
+            />
+          </InputGroup>
         </FormControl>
         <Button type="submit" w="full" mt={6} colorScheme="blue" size="lg">
           {signup ? "Start coding now" : "Login"}
@@ -113,12 +140,15 @@ const AuthForm = function () {
         or continue with these social profile.
       </Text>
       <Flex justifyContent="center" gap={6} mt={4}>
-        <Button onClick={handleGoogleAuth}>
-          <Google />
-        </Button>
-        <Facebook />
-        <Twitter />
-        <Github />
+        <IconButton
+          aria-label="Sign in with Google"
+          colorScheme="whiteAlpha"
+          icon={<Google />}
+          onClick={handleGoogleAuth}
+        />
+        <IconButton colorScheme="whiteAlpha" icon={<Facebook />} />
+        <IconButton colorScheme="whiteAlpha" icon={<Twitter />} />
+        <IconButton colorScheme="whiteAlpha" icon={<Github />} />
       </Flex>
       <Text
         mt={6}
@@ -127,7 +157,7 @@ const AuthForm = function () {
         textAlign="center"
         letterSpacing="wide"
         lineHeight="5">
-        {signup ? "Already a member " : "Don't have an account yet "}
+        {signup ? "Already a member? " : "Don't have an account yet? "}
         <Button
           colorScheme="blue"
           size="sm"
