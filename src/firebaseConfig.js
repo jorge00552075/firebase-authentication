@@ -32,10 +32,11 @@ const firebaseApp = initializeApp({
   appId: "1:185392183339:web:82ec1c2693936c8b15526e",
 });
 
-export const auth = getAuth();
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: "select_account" });
-export const db = getFirestore();
+
+// AUTHENTICATION
+export const auth = getAuth();
 
 export const createUser = (email, password) =>
   createUserWithEmailAndPassword(auth, email, password);
@@ -45,15 +46,18 @@ export const signInUser = (email, password) =>
 
 export const signInWithGoogle = () => signInWithPopup(auth, provider);
 
-export const updateUser = (uid, data) => {
-  const documentReference = doc(db, "users", uid);
-  return updateDoc(documentReference, data);
-};
-
 export const signOutUser = () => signOut(auth);
 
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
+
+// DATABASE
+export const db = getFirestore();
+
+export const updateUser = (uid, data) => {
+  const documentReference = doc(db, "users", uid);
+  return updateDoc(documentReference, data);
+};
 
 export const createUserDoc = async (user) => {
   try {
@@ -81,12 +85,12 @@ export const snapshotListener = (uid, callback) => {
   return onSnapshot(documentReference, callback);
 };
 
+// STORAGE
 const firebaseStorage = getStorage();
+
 export const uploadPhoto = async (uid, file) => {
   const storageReference = ref(firebaseStorage, `avatars/${uid}${Date.now()}`);
   await uploadBytes(storageReference, file);
   const downloadURL = await getDownloadURL(storageReference);
   await updateUser(uid, { photoURL: downloadURL });
-
-  console.log("UPLOAD FINISHED");
 };

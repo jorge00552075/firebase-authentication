@@ -14,9 +14,10 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { TriangleDownIcon } from "@chakra-ui/icons";
+
+import { signOutUser } from "../firebaseConfig";
 import AuthContext from "../context/auth-context";
 import { ReactComponent as Logo } from "../assets/devchallenges.svg";
-import { signOutUser } from "../firebaseConfig";
 
 const Header = function () {
   const { documentData } = useContext(AuthContext);

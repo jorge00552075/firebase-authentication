@@ -2,19 +2,21 @@ import { useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import AuthContext from "./context/auth-context.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
-import AccountPage from "./pages/AccountPage.jsx";
+import Account from "./pages/Account.page.jsx";
 import UpdateAccountPage from "./pages/UpdateAccountPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import LoadingSpinner from "./components/LoadingSpinner.jsx";
 
 function App() {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, loading } = useContext(AuthContext);
 
+  if (loading) return <LoadingSpinner />;
   return (
     <Routes>
       <Route path="/auth" element={<AuthPage />} />
-      {currentUser && <Route path="/account" element={<AccountPage />} />}
+      {currentUser && <Route path="/MyAccount" element={<Account />} />}
       {currentUser && (
-        <Route path="/account/update" element={<UpdateAccountPage />} />
+        <Route path="/MyAccount/update" element={<UpdateAccountPage />} />
       )}
       <Route path="/" element={<Navigate to="/auth" />} />
       <Route path="*" element={<NotFound />} />
@@ -23,5 +25,4 @@ function App() {
 }
 
 export default App;
-// add loading spinner
 // add animations

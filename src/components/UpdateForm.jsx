@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link as ReachLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
@@ -17,30 +17,26 @@ import {
   useToast,
   Flex,
 } from "@chakra-ui/react";
-import AuthContext from "../../context/auth-context.jsx";
-import Card from "../layout/Card.jsx";
-import { updateUser, uploadPhoto } from "../../firebaseConfig";
+import { updateUser, uploadPhoto } from "../firebaseConfig";
+import AuthContext from "../context/auth-context";
+import Card from "./Card";
 
 const UpdateForm = function () {
   const { documentData } = useContext(AuthContext);
+  const { photoURL, displayName, bio, phoneNumber, email, password } =
+    documentData;
   const navigate = useNavigate();
   const toast = useToast();
+  const [loading, setLoading] = useState(false);
 
-  const defaultValues = {
-    photoURL: documentData.photoURL,
-    displayName: documentData.displayName,
-    bio: documentData.bio,
-    phoneNumber: documentData.phoneNumber,
-    email: documentData.email,
-    password: documentData.password,
-  };
+  // prettier-ignore
+  const defaultValues = { photoURL, displayName, bio, phoneNumber, email, password };
 
   const { register, handleSubmit } = useForm({ defaultValues });
 
   const onSubmit = async (data) => {
     await updateUser(documentData.uid, data);
-    // ** add transition animation **
-    navigate("/account", { replace: true });
+    navigate("/MyAccount", { replace: true });
     toast({
       status: "success",
       title: "Successfully updated account.",
@@ -48,16 +44,21 @@ const UpdateForm = function () {
     });
   };
 
-  const handleChange = async (event) => {
+  const updatePhotoHandler = async (event) => {
+    setLoading(true);
     const file = event.target.files[0];
     await uploadPhoto(documentData.uid, file);
-    // ADD LOADING SPINNER !!!
+    setLoading(false);
   };
 
   return (
     <Container maxW="container.lg" mt={4}>
-      <Link as={ReachLink} to={"/account"}>
-        &larr; Back
+      <Link
+        as={ReachLink}
+        to={"/MyAccount"}
+        fontWeight="medium"
+        color="blue.500">
+        &#10094; Back
       </Link>
       <Card>
         <Box>
@@ -93,13 +94,13 @@ const UpdateForm = function () {
                   letterSpacing="wide"
                   cursor="pointer"
                   _hover={{ textDecoration: "underline" }}>
-                  CHOOSE IMAGE
+                  {loading ? "..." : "Change photo"}
                 </FormLabel>
                 <Input
                   type="file"
                   id="file"
                   name="file"
-                  onChange={handleChange}
+                  onChange={updatePhotoHandler}
                   display="none"
                 />
               </FormControl>
@@ -112,6 +113,7 @@ const UpdateForm = function () {
                 Name
               </FormLabel>
               <Input
+                // borderRadius="xl"
                 id="displayName"
                 type="text"
                 placeholder="Enter your name"

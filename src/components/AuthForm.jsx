@@ -13,14 +13,11 @@ import {
   IconButton,
   InputLeftElement,
   InputGroup,
+  Box,
 } from "@chakra-ui/react";
 import { EmailIcon, LockIcon } from "@chakra-ui/icons";
-import { Google, Facebook, Twitter, Github, Logo } from "../../assets/index";
-import {
-  createUser,
-  signInUser,
-  signInWithGoogle,
-} from "../../firebaseConfig.js";
+import { createUser, signInUser, signInWithGoogle } from "../firebaseConfig";
+import { Google, Facebook, Twitter, Github, Logo } from "../assets/index";
 
 const AuthForm = function () {
   const [signup, setSignup] = useState(true);
@@ -31,9 +28,7 @@ const AuthForm = function () {
 
   const handleGoogleAuth = async () => {
     const user = await signInWithGoogle();
-    if (user) {
-      navigate("/account", { replace: true });
-    }
+    if (user) navigate("/MyAccount", { replace: true });
   };
 
   const handleClick = () => setSignup((v) => !v);
@@ -43,23 +38,15 @@ const AuthForm = function () {
 
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    // validate inputs
 
     try {
-      // REFACTOR !!!
+      let user;
       if (signup) {
-        const user = await createUser(email, password);
-
-        if (user) {
-          navigate("/account", { replace: true });
-        }
+        user = await createUser(email, password);
       } else {
-        const user = await signInUser(email, password);
-
-        if (user) {
-          navigate("/account", { replace: true });
-        }
+        user = await signInUser(email, password);
       }
+      if (user) navigate("/MyAccount", { replace: true });
     } catch (err) {
       toast({
         title: "Error",
@@ -79,14 +66,14 @@ const AuthForm = function () {
       borderColor="gray.400"
       borderRadius="3xl">
       <Logo />
-      <Heading as="h1" mt={6} fontWeight={600} fontSize="lg" lineHeight="7">
+      <Heading as="h1" mt={6} fontWeight="semibold" fontSize="lg">
         {signup ? "Join thousands of learners from around the world." : "Login"}
       </Heading>
       <Text mt={2}>
         {signup &&
           "Master web development by making real-life projects. There are multiple for you to choose."}
       </Text>
-      <form onSubmit={handleSubmit} style={{ marginTop: "24px" }}>
+      <Box as="form" onSubmit={handleSubmit} mt={6}>
         <FormControl isRequired>
           <FormLabel htmlFor="email" hidden>
             Email
@@ -129,7 +116,7 @@ const AuthForm = function () {
         <Button type="submit" w="full" mt={6} colorScheme="blue" size="lg">
           {signup ? "Start coding now" : "Login"}
         </Button>
-      </form>
+      </Box>
       <Text
         mt={6}
         fontSize="sm"
